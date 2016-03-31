@@ -1,4 +1,4 @@
-%global commit0 113e2a55a49dbac93abb22a7fc77987d589304b3
+%global commit0 a447656ed0924573ba242d6c872e52e831ad38c1
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0
-Release:        18.%{?shortcommit0}%{?dist}
+Release:        19.%{?shortcommit0}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -181,6 +181,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Mar 31 2016 Simone Caronni <negativo17@gmail.com> - 1.0-19.a447656
+- Bugfixes.
+
 * Tue Mar 29 2016 Simone Caronni <negativo17@gmail.com> - 1.0-18.113e2a5
 - Update to latest snapshot for various fixes.
 
