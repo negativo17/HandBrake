@@ -1,0 +1,31 @@
+diff -Naur HandBrake-0.10.3.old/libhb/muxavformat.c HandBrake-0.10.3/libhb/muxavformat.c
+--- HandBrake-0.10.3.old/libhb/muxavformat.c	2016-01-18 22:39:17.000000000 +0100
++++ HandBrake-0.10.3/libhb/muxavformat.c	2016-01-28 21:56:04.455022879 +0100
+@@ -121,7 +121,10 @@
+     hb_mux_data_t * track;
+     int meta_mux;
+     int max_tracks;
+-    int ii, jj, ret;
++    int ii, ret;
++#ifdef AV_PKT_DATA_FALLBACK_TRACK
++    int jj;
++#endif
+ 
+     const char *muxer_name = NULL;
+ 
+@@ -602,6 +605,7 @@
+         }
+     }
+ 
++#ifdef AV_PKT_DATA_FALLBACK_TRACK
+     // Check for audio track associations
+     for (ii = 0; ii < hb_list_count(job->list_audio); ii++)
+     {
+@@ -651,6 +655,7 @@
+             } break;
+         }
+     }
++#endif
+ 
+     char * subidx_fmt =
+         "size: %dx%d\n"

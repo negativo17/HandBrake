@@ -1,0 +1,73 @@
+diff -Naur HandBrake-0.9.8.old/gtk/src/Makefile.am HandBrake-0.9.8/gtk/src/Makefile.am
+--- HandBrake-0.9.8.old/gtk/src/Makefile.am	2011-02-27 19:41:24.000000000 +0100
++++ HandBrake-0.9.8/gtk/src/Makefile.am	2014-03-28 16:20:50.601261776 +0100
+@@ -10,7 +10,7 @@
+ HB_LIBS= \
+ 	-lhb -la52 -lmkv -lavformat -lavcodec -lavutil -ldca -ldvdnav -ldvdread \
+ 	-lfaac -lmp3lame -lmpeg2 -lvorbis -lvorbisenc -logg -lsamplerate \
+-	-lx264 -lmp4v2 -lswscale -ltheora -lz \
++	-lx264 -lmp4v2 -lswscale -ltheoraenc -ltheoradec -lxml2 -lz \
+ 	-lbz2 -lpthread -lbluray -lass -lfontconfig -lfreetype
+ endif
+ 
+diff -Naur HandBrake-0.9.8.old/make/include/main.defs HandBrake-0.9.8/make/include/main.defs
+--- HandBrake-0.9.8.old/make/include/main.defs	2012-06-08 23:45:19.000000000 +0200
++++ HandBrake-0.9.8/make/include/main.defs	2014-03-28 16:21:25.395970928 +0100
+@@ -8,7 +8,6 @@
+ 
+ ###############################################################################
+ 
+-MODULES += contrib/a52dec
+ 
+ ifneq (,$(filter $(BUILD.system),cygwin mingw))
+ ifneq ($(HAS.bz2),1)
+@@ -23,22 +22,9 @@
+ 
+ MODULES += contrib/faac
+ MODULES += contrib/ffmpeg
+-MODULES += contrib/fontconfig
+-MODULES += contrib/freetype
+-MODULES += contrib/lame
+-MODULES += contrib/libass
+ MODULES += contrib/libdca
+-MODULES += contrib/libdvdread
+-MODULES += contrib/libdvdnav
+ MODULES += contrib/libbluray
+-MODULES += contrib/libmkv
+-MODULES += contrib/libogg
+-MODULES += contrib/libsamplerate
+-MODULES += contrib/libtheora
+-MODULES += contrib/libvorbis
+-MODULES += contrib/libxml2
+ MODULES += contrib/mp4v2
+-MODULES += contrib/mpeg2dec
+ 
+ ifneq (,$(filter $(BUILD.system),mingw))
+ ifneq ($(HAS.pthread),1)
+@@ -46,7 +32,6 @@
+ endif
+ endif
+ 
+-MODULES += contrib/x264
+ 
+ ifneq (,$(filter $(BUILD.system),cygwin mingw))
+ ifneq ($(HAS.iconv),1)
+diff -Naur HandBrake-0.9.8.old/test/module.defs HandBrake-0.9.8/test/module.defs
+--- HandBrake-0.9.8.old/test/module.defs	2011-10-21 20:24:43.000000000 +0200
++++ HandBrake-0.9.8/test/module.defs	2014-03-28 16:20:50.602261763 +0100
+@@ -9,10 +9,11 @@
+ 
+ TEST.exe = $(BUILD/)$(call TARGET.exe,$(HB.name)CLI)
+ 
+-TEST.libs = $(LIBHB.a) $(foreach n, \
+-        a52 ass avcodec avformat avutil dca dvdnav dvdread faac fontconfig freetype mkv mpeg2 mp3lame mp4v2 \
+-        ogg samplerate swscale theora vorbis vorbisenc x264 xml2 bluray, \
+-        $(CONTRIB.build/)lib/lib$(n).a )
++TEST.libs = $(LIBHB.a) $(CONTRIB.build/)lib/libavcodec.a $(CONTRIB.build/)lib/libavformat.a \
++    $(CONTRIB.build/)lib/libavutil.a $(CONTRIB.build/)lib/libdca.a $(CONTRIB.build/)lib/libfaac.a \
++    $(CONTRIB.build/)lib/libmp4v2.a $(CONTRIB.build/)lib/libswscale.a $(CONTRIB.build/)lib/libbluray.a
++TEST.libs += -lass -lmp3lame -lsamplerate -lvorbisenc -ltheoraenc -ltheoradec -lvorbis \
++    -lx264 -lmkv -lz -lbz2 -lpthread -ldl -lxml2 -la52 -lmpeg2 -ldvdnav -ldvdread
+ 
+ TEST.install.exe = $(DESTDIR)$(PREFIX/)bin/$(notdir $(TEST.exe))
+ 
