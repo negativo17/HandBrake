@@ -113,7 +113,7 @@ This package contains the command line version of the program.
 
 %prep
 %setup -qn %{name}-%{commit0}
-%{!?_with_ffmpeg:%patch0 -p1}
+%{?_with_ffmpeg:%patch0 -p1}
 mkdir -p download
 
 %{!?_with_ffmpeg:cp %{SOURCE10} download}
