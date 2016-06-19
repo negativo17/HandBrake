@@ -50,8 +50,8 @@ BuildRequires:  lame-devel >= 3.98
 BuildRequires:  libappindicator-gtk3-devel
 # Should be >= 0.13.2:
 BuildRequires:  libass-devel
-# Build 0.9.3-2 contains a required patch for HandBrake 1.0:
-BuildRequires:  libbluray-devel >= 0.9.3
+# Contains a required patch for HandBrake 1.0:
+BuildRequires:  libbluray-devel >= 0.9.3-2
 BuildRequires:  libdvdnav-devel >= 5.0.1
 BuildRequires:  libdvdread-devel >= 5.0.0
 BuildRequires:  libfdk-aac-devel >= 0.1.4
