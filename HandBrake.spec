@@ -180,7 +180,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %files cli
 %{!?_licensedir:%global license %%doc}
 %license COPYING
-%doc AUTHORS CREDITS NEWS THANKS TRANSLATIONS
+%doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/HandBrakeCLI
 
 %changelog
