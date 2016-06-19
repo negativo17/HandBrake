@@ -1,8 +1,9 @@
-%global commit0 879a512e2b58b73171b8ee542470c722f0b60647
+%global commit0 221bfe7afa05f8a0a9f85027992328b7c5226de2
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
-# Build with "--with ffmpeg" or enable this to use system FFMpeg
-# libraries instead of bundled libAV.
+# Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
+# instead of bundled libAV. Unfortunately with FFMpeg UTF-8 subtitles are not
+# recognized in media source files. :(
 #global _with_ffmpeg 1
 
 # Build with "--with mfx" or enable this to build support for Intel QuickSync
@@ -11,7 +12,7 @@
 
 Name:           HandBrake
 Version:        1.0
-Release:        21.%{?shortcommit0}%{?dist}
+Release:        22%{?shortcommit0:.git.%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -26,7 +27,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # cd build
 # make contrib.fetch
 
-%{!?_with_ffmpeg:Source10:       http://download.handbrake.fr/contrib/libav-v11.3-0-g00abc00.tar.gz}
+%{!?_with_ffmpeg:Source10:       https://libav.org/releases/libav-11.3.tar.gz}
 
 # Make bundled FFMpeg patch optional (until FFMpeg 2.9.x):
 # https://github.com/HandBrake/HandBrake/pull/32
@@ -39,21 +40,23 @@ BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  fontconfig-devel
 %{?_with_ffmpeg:BuildRequires:  ffmpeg-devel >= 2.6}
-BuildRequires:  freetype-devel
-BuildRequires:  fribidi-devel
+BuildRequires:  freetype-devel >= 2.6
+BuildRequires:  fribidi-devel >= 0.19.7
 BuildRequires:  gstreamer1-devel
 BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  intltool
 BuildRequires:  jansson-devel
 BuildRequires:  lame-devel >= 3.98
 BuildRequires:  libappindicator-gtk3-devel
+# Should be >= 0.13.2:
 BuildRequires:  libass-devel
-BuildRequires:  libbluray-devel >= 0.2.3
+# Build 0.9.3-2 contains a required patch for HandBrake 1.0:
+BuildRequires:  libbluray-devel >= 0.9.3
 BuildRequires:  libdvdnav-devel >= 5.0.1
 BuildRequires:  libdvdread-devel >= 5.0.0
 BuildRequires:  libfdk-aac-devel >= 0.1.4
 BuildRequires:  libgudev1-devel
-%{?_with_mfx:BuildRequires:  libmfx-devel}
+%{?_with_mfx:BuildRequires:  libmfx-devel >= 6.0}
 BuildRequires:  libmpeg2-devel >= 0.5.1
 BuildRequires:  libnotify-devel
 BuildRequires:  libogg-devel
@@ -62,7 +65,7 @@ BuildRequires:  libsamplerate-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libtool
 BuildRequires:  libvorbis-devel
-BuildRequires:  libvpx-devel
+BuildRequires:  libvpx-devel >= 1.5
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
@@ -181,6 +184,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sun Jun 19 2016 Simone Caronni <negativo17@gmail.com> - 1.0-22.221bfe7
+- Update to latest sources, bump build requirements.
+
 * Tue May 24 2016 Simone Caronni <negativo17@gmail.com> - 1.0-21.879a512
 - Update to latest sources.
 
