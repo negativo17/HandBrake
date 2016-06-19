@@ -172,7 +172,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %files -f ghb.lang gui
 %{!?_licensedir:%global license %%doc}
 %license COPYING
-%doc AUTHORS CREDITS NEWS THANKS TRANSLATIONS
+%doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/ghb
 %{_datadir}/applications/ghb.desktop
 %{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
