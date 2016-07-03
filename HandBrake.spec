@@ -40,8 +40,10 @@ BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  fontconfig-devel
 %{?_with_ffmpeg:BuildRequires:  ffmpeg-devel >= 2.6}
-BuildRequires:  freetype-devel >= 2.6
-BuildRequires:  fribidi-devel >= 0.19.7
+# Should be >= 2.6:
+BuildRequires:  freetype-devel >= 2.4.11
+# Should be >= 0.19.7:
+BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gstreamer1-devel
 BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  intltool
@@ -49,7 +51,7 @@ BuildRequires:  jansson-devel
 BuildRequires:  lame-devel >= 3.98
 BuildRequires:  libappindicator-gtk3-devel
 # Should be >= 0.13.2:
-BuildRequires:  libass-devel
+BuildRequires:  libass-devel >= 0.13.1
 # Contains a required patch for HandBrake 1.0:
 BuildRequires:  libbluray-devel >= 0.9.3-2
 BuildRequires:  libdvdnav-devel >= 5.0.1
@@ -65,7 +67,8 @@ BuildRequires:  libsamplerate-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libtool
 BuildRequires:  libvorbis-devel
-BuildRequires:  libvpx-devel >= 1.5
+# Should be >= 1.5:
+BuildRequires:  libvpx-devel >= 1.3
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
