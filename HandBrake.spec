@@ -1,18 +1,17 @@
-%global commit0 6b5d91aef5ba0fde44ab5960f643e6e5da509642
+%global commit0 d3985316111dc8c995bd1e2fe6dcfc700ea30d0b
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%global date 20160929
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
 # instead of bundled libAV. Unfortunately with FFMpeg UTF-8 subtitles are not
 # recognized in media source files. :(
 #global _with_ffmpeg 1
 
-# Build with "--with mfx" or enable this to build support for Intel QuickSync
-# encoder support. Links and builds fine, but there is no GUI for it.
-#global _with_mfx 1
+%global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
 Version:        1.0
-Release:        26%{?shortcommit0:.%{shortcommit0}}%{?dist}
+Release:        27%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -38,14 +37,17 @@ BuildRequires:  cmake
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
-BuildRequires:  fontconfig-devel
+# Should be >= 2.12.1:
+BuildRequires:  fontconfig-devel >= 2.10.95
 %{?_with_ffmpeg:BuildRequires:  ffmpeg-devel >= 2.6}
-# Should be >= 2.6:
+# Should be >= 2.6.5:
 BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gstreamer1-devel
 BuildRequires:  gstreamer1-plugins-base-devel
+# Should be >= 1.3.0
+BuildRequires:  harfbuzz-devel
 BuildRequires:  intltool
 BuildRequires:  jansson-devel
 BuildRequires:  lame-devel >= 3.98
@@ -58,7 +60,7 @@ BuildRequires:  libdvdnav-devel >= 5.0.1
 BuildRequires:  libdvdread-devel >= 5.0.0
 BuildRequires:  libfdk-aac-devel >= 0.1.4
 BuildRequires:  libgudev1-devel
-%{?_with_mfx:BuildRequires:  libmfx-devel >= 6.0}
+BuildRequires:  libmfx-devel >= 1.16
 BuildRequires:  libmpeg2-devel >= 0.5.1
 BuildRequires:  libnotify-devel
 BuildRequires:  libogg-devel
@@ -66,12 +68,15 @@ BuildRequires:  librsvg2-devel
 BuildRequires:  libsamplerate-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libtool
+BuildRequires:  libva-devel
 BuildRequires:  libvorbis-devel
-# Should be >= 1.5:
+# Should be >= 1.5.0:
 BuildRequires:  libvpx-devel >= 1.3
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
+# Should be >= 1.1.3:
+BuildRequires:  opus-devel
 BuildRequires:  patch
 BuildRequires:  python
 BuildRequires:  subversion
@@ -79,6 +84,7 @@ BuildRequires:  tar
 BuildRequires:  webkitgtk3-devel
 BuildRequires:  wget
 BuildRequires:  x264-devel >= 0.148
+# Should be >= 2.1:
 BuildRequires:  x265-devel >= 1.9
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
@@ -125,7 +131,7 @@ mkdir -p download
 %{!?_with_ffmpeg:cp %{SOURCE10} download}
 
 # Use system libraries in place of bundled ones
-for module in a52dec fdk-aac %{?_with_ffmpeg:ffmpeg} libdvdnav libdvdread libbluray %{?_with_mfx:libmfx} libvpx x265; do
+for module in a52dec fdk-aac %{?_with_ffmpeg:ffmpeg} libdvdnav libdvdread libbluray libmfx libvpx x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -140,7 +146,7 @@ export http_proxy=http://127.0.0.1
 # By default the project is built with optimizations for speed and no debug.
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 # debug options.
-echo "GCC.args.O.speed = %{optflags} %{?_with_ffmpeg:-I%{_includedir}/ffmpeg} -lx265 -lfdk-aac %{?_with_mfx:-lmfx}" > custom.defs
+echo "GCC.args.O.speed = %{optflags} %{?_with_ffmpeg:-I%{_includedir}/ffmpeg} -lx265 -lfdk-aac -lmfx" > custom.defs
 echo "GCC.args.g.none = " >> custom.defs
 
 # Not an autotools configure script.
@@ -149,25 +155,37 @@ echo "GCC.args.g.none = " >> custom.defs
     --prefix=%{_prefix} \
     --verbose \
     --disable-gtk-update-checks \
-    %{?_with_mfx:--enable-qsv}
+    --enable-qsv
 
 make -C build %{?_smp_mflags}
 
 %install
 %make_install -C build
-desktop-file-validate %{buildroot}/%{_datadir}/applications/ghb.desktop
+
+# Double icon/desktop file after metadata addition
+rm -f %{buildroot}/%{_datadir}/applications/ghb.desktop \
+    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
+
+sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' \
+    %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
+
 %find_lang ghb
 
 %post gui
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+%if 0%{?fedora} <= 24 || 0%{?rhel}
 /usr/bin/update-desktop-database &> /dev/null || :
+%endif
 
 %postun gui
 if [ $1 -eq 0 ] ; then
     touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
+%if 0%{?fedora} <= 24 || 0%{?rhel}
 /usr/bin/update-desktop-database &> /dev/null || :
+%endif
 
 %posttrans gui
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
@@ -177,8 +195,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %license COPYING
 %doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/ghb
-%{_datadir}/applications/ghb.desktop
-%{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
+%if 0%{?fedora}
+%{_datadir}/appdata/%{desktop_id}.appdata.xml
+%else
+%exclude %{_datadir}/appdata/%{desktop_id}.appdata.xml
+%endif
+%{_datadir}/applications/%{desktop_id}.desktop
+%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
 %files cli
 %{!?_licensedir:%global license %%doc}
@@ -187,6 +210,14 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sun Oct 02 2016 Simone Caronni <negativo17@gmail.com> - 1.0-27.20160929gitd398531
+- Update to latest snapshot.
+- Update package release according to package guidelines.
+- Enable Intel Quick Sync Video encoding by default (libmfx package in main
+  repositories).
+- Add AppData support for Fedora (metadata from upstream).
+- Do not run update-desktop-database on Fedora 25+ as per packaging guidelines.
+
 * Fri Aug 05 2016 Simone Caronni <negativo17@gmail.com> - 1.0-26.6b5d91a
 - Update to latest sources.
 
