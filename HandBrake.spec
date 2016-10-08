@@ -1,4 +1,4 @@
-%global commit0 d3985316111dc8c995bd1e2fe6dcfc700ea30d0b
+%global commit0 88807bb992a5e26e2264240597bf5dd17b6bab71
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global date 20160929
 
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0
-Release:        28%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        29%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -84,7 +84,7 @@ BuildRequires:  tar
 BuildRequires:  webkitgtk3-devel
 BuildRequires:  wget
 BuildRequires:  x264-devel >= 1:0.148
-BuildRequires:  x265-devel >= 1:2.1
+BuildRequires:  x265-devel >= 1:2.1-2
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
 Requires:       hicolor-icon-theme
@@ -211,6 +211,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sat Oct 08 2016 Simone Caronni <negativo17@gmail.com> - 1.0-29.20160929git88807bb
+- Require x265 hotfix.
+
 * Sun Oct 02 2016 Simone Caronni <negativo17@gmail.com> - 1.0-28.20160929gitd398531
 - Rebuild for x265 update.
 
