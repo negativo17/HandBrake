@@ -1,6 +1,6 @@
 %global commit0 88807bb992a5e26e2264240597bf5dd17b6bab71
+%global date 20161006
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global date 20160929
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
 # instead of bundled libAV. Unfortunately with FFMpeg UTF-8 subtitles are not
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0
-Release:        29%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        30%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -211,6 +211,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sat Oct 08 2016 Simone Caronni <negativo17@gmail.com> - 1.0-30.20161006git88807bb
+- Fix date.
+
 * Sat Oct 08 2016 Simone Caronni <negativo17@gmail.com> - 1.0-29.20160929git88807bb
 - Require x265 hotfix.
 
