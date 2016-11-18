@@ -1,5 +1,5 @@
-%global commit0 88807bb992a5e26e2264240597bf5dd17b6bab71
-%global date 20161006
+%global commit0 b9c5daa5663a78f8d68af69f58cf476d0ccaa8b6
+%global date 20161116
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0
-Release:        30%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        31%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -134,6 +134,9 @@ for module in a52dec fdk-aac %{?_with_ffmpeg:ffmpeg} libdvdnav libdvdread libblu
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
+# Fix desktop file
+sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
+
 %build
 echo "HASH=%{commit0}" > version.txt
 echo "SHORTHASH=%{shortcommit0}" >> version.txt
@@ -163,12 +166,17 @@ make -C build %{?_smp_mflags}
 %install
 %make_install -C build
 
-# Double icon/desktop file after metadata addition
+# Desktop file, icons and AppStream metadata from FlatPak build (more complete)
 rm -f %{buildroot}/%{_datadir}/applications/ghb.desktop \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
 
-sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' \
+install -D -p -m 644 gtk/src/%{desktop_id}.desktop \
     %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
+install -D -p -m 644 gtk/src/%{desktop_id}.svg \
+    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
+install -D -p -m 644 gtk/src/%{desktop_id}.appdata.xml \
+    %{buildroot}/%{_datadir}/appdata/%{desktop_id}.appdata.xml
+
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
 
 %find_lang ghb
@@ -211,6 +219,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri Nov 18 2016 Simone Caronni <negativo17@gmail.com> - 1.0-31.20161116gitb9c5daa
+- Update to latest snapshot.
+- Use Flatpak desktop file, icon and AppStream metadata (more complete).
+
 * Sat Oct 08 2016 Simone Caronni <negativo17@gmail.com> - 1.0-30.20161006git88807bb
 - Fix date.
 - Rebuild for fdk-aac update.
