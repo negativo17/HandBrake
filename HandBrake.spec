@@ -87,7 +87,9 @@ BuildRequires:  x264-devel >= 1:0.148
 BuildRequires:  x265-devel >= 1:2.1-2
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
+
 Requires:       hicolor-icon-theme
+%{!?_with_ffmpeg:Provides: bundled(libav) = 11.3}
 
 %description
 %{name} is a general-purpose, free, open-source, cross-platform, multithreaded
