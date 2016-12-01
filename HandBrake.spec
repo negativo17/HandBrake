@@ -82,6 +82,7 @@ BuildRequires:  libvpx-devel >= 1.3
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
+BuildRequires:  opencl-headers
 # Should be >= 1.1.3:
 BuildRequires:  opus-devel
 BuildRequires:  patch
