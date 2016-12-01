@@ -1,5 +1,5 @@
-%global commit0 b9c5daa5663a78f8d68af69f58cf476d0ccaa8b6
-%global date 20161116
+%global commit0 fac5e0ee11d33d812aa063a96d6af5148ac52458
+%global date 20161129
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0
-Release:        31%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        32%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -31,6 +31,13 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # Make bundled FFMpeg patch optional (until FFMpeg 2.9.x):
 # https://github.com/HandBrake/HandBrake/pull/32
 Patch0:         https://github.com/SeanMcG/HandBrake/commit/cf1571f3bf314638a608784f19f80edb736e8144.patch
+
+# Build with unpatched libbluray
+Patch1:         HandBrake-no_clip_id.patch
+# Use system OpenCL headers
+Patch2:         HandBrake-system-OpenCL.patch
+# Pass strip tool override to gtk/configure
+Patch3:         HandBrake-nostrip.patch
 
 BuildRequires:  a52dec-devel >= 0.7.4
 BuildRequires:  cmake
@@ -127,6 +134,9 @@ This package contains the command line version of the program.
 %prep
 %setup -qn %{name}-%{commit0}
 %{?_with_ffmpeg:%patch0 -p1}
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 mkdir -p download
 
 %{!?_with_ffmpeg:cp %{SOURCE10} download}
@@ -221,6 +231,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Dec 01 2016 Simone Caronni <negativo17@gmail.com> - 1.0-32.20161129gitfac5e0e
+- Update to latest snapshot.
+- Add patches from Dominik Mierzejewski:
+  * Allow use of unpatched libbluray.
+  * Use system OpenCL headers.
+  * Do not strip binaries.
+
 * Fri Nov 18 2016 Simone Caronni <negativo17@gmail.com> - 1.0-31.20161116gitb9c5daa
 - Update to latest snapshot.
 - Use Flatpak desktop file, icon and AppStream metadata (more complete).

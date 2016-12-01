@@ -1,0 +1,11 @@
+diff -up HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules.nostrip HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules
+--- HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules.nostrip	2016-08-03 22:46:47.000000000 +0200
++++ HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules	2016-08-22 09:47:47.465186383 +0200
+@@ -18,6 +18,7 @@ $(GTK.CONFIGURE.stamp): $(GTK.src/)confi
+ 		PKG_CONFIG_PATH=$(BUILD/)contrib/lib/pkgconfig \
+ 	    CFLAGS="$(call fn.ARGS,GTK.GCC,.g .O *D ?extra)" \
+ 	    LDFLAGS="$(call fn.ARGS,GTK.GCC,?strip .g .O ?extra.exe)" \
++	    STRIP="$(STRIP.exe)" \
+ 	    --prefix=$(PREFIX) \
+ 	    --with-hb=$(call fn.ABSOLUTE,$(BUILD/))
+ 	$(TOUCH.exe) $@

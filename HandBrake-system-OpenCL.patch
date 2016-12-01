@@ -1,0 +1,48 @@
+diff -up HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/internal.h.cl HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/internal.h
+--- HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/internal.h.cl	2016-08-03 22:46:47.000000000 +0200
++++ HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/internal.h	2016-08-22 09:11:00.701412575 +0200
+@@ -8,7 +8,7 @@
+  */
+ 
+ #include "hbffmpeg.h"
+-#include "extras/cl.h"
++#include <CL/cl.h>
+ #ifdef USE_QSV
+ #include "libavcodec/qsv.h"
+ #endif
+diff -up HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/opencl.h.cl HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/opencl.h
+--- HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/opencl.h.cl	2016-08-03 22:46:47.000000000 +0200
++++ HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/opencl.h	2016-08-22 09:18:03.188944265 +0200
+@@ -10,7 +10,7 @@
+ #ifndef HB_OPENCL_H
+ #define HB_OPENCL_H
+ 
+-#include "extras/cl.h"
++#include <CL/cl.h>
+ #include "openclwrapper.h"
+ 
+ // we only support OpenCL 1.1 or later
+diff -up HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.c.cl HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.c
+--- HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.c.cl	2016-08-03 22:46:47.000000000 +0200
++++ HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.c	2016-08-22 09:18:20.441009658 +0200
+@@ -13,7 +13,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include "extras/cl.h"
++#include <CL/cl.h>
+ #include "opencl.h"
+ #include "openclwrapper.h"
+ #include "openclkernels.h"
+diff -up HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.h.cl HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.h
+--- HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.h.cl	2016-08-03 22:46:47.000000000 +0200
++++ HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/openclwrapper.h	2016-08-22 09:17:42.408865498 +0200
+@@ -15,7 +15,7 @@
+ #define HB_OPENCL_WRAPPER_H
+ 
+ #include "common.h"
+-#include "extras/cl.h"
++#include <CL/cl.h>
+ 
+ //support AMD opencl
+ #define CL_QUEUE_THREAD_HANDLE_AMD 0x403E

@@ -1,0 +1,14 @@
+diff -up HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/bd.c.no_clip_id HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/bd.c
+--- HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/bd.c.no_clip_id	2016-08-03 22:46:47.000000000 +0200
++++ HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/libhb/bd.c	2016-08-21 19:16:56.297857060 +0200
+@@ -247,8 +247,8 @@ static void show_clip_list( BLURAY_TITLE
+         hh = duration / (90000 * 60 * 60);
+         mm = (duration / (90000 * 60)) % 60;
+         ss = (duration / 90000) % 60;
+-        hb_log("bd:\t\t%s.M2TS -- Duration: %02d:%02d:%02d",
+-               ti->clips[ii].clip_id, hh, mm, ss);
++        hb_log("bd:\t\t%d.M2TS -- Duration: %02d:%02d:%02d",
++               ii, hh, mm, ss);
+     }
+ }
+ 
