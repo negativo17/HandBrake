@@ -26,7 +26,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # cd build
 # make contrib.fetch
 
-%{!?_with_ffmpeg:Source10:       https://libav.org/releases/libav-11.3.tar.gz}
+%{!?_with_ffmpeg:Source10:       https://libav.org/releases/libav-12.tar.gz}
 
 # Make bundled FFMpeg patch optional (until FFMpeg 2.9.x):
 # https://github.com/HandBrake/HandBrake/pull/32
