@@ -1,5 +1,5 @@
-%global commit0 063446fa62266cea2d6a0487e8814bf5f2dba376
-%global date 20170102
+%global commit0 c4a14d3465d4bc663bdb0ad061cba21eeef44afd
+%global date 20170123
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0.2
-Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -38,6 +38,8 @@ Patch1:         HandBrake-no_clip_id.patch
 Patch2:         HandBrake-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
 Patch3:         HandBrake-nostrip.patch
+# Use system libmfx with FFmpeg
+Patch4:         HandBrake-system-libmfx.patch
 
 BuildRequires:  a52dec-devel >= 0.7.4
 BuildRequires:  cmake
@@ -138,6 +140,7 @@ This package contains the command line version of the program.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 mkdir -p download
 
 %{!?_with_ffmpeg:cp %{SOURCE10} download}
@@ -161,7 +164,7 @@ export http_proxy=http://127.0.0.1
 # By default the project is built with optimizations for speed and no debug.
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 # debug options.
-echo "GCC.args.O.speed = %{optflags} %{?_with_ffmpeg:-I%{_includedir}/ffmpeg} -lx265 -lfdk-aac -lmfx" > custom.defs
+echo "GCC.args.O.speed = %{optflags} %{?_with_ffmpeg:-I%{_includedir}/ffmpeg} -lx265 -lfdk-aac -lmfx -lva-drm" > custom.defs
 echo "GCC.args.g.none = " >> custom.defs
 
 # Not an autotools configure script.
@@ -232,6 +235,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Jan 24 2017 Simone Caronni <negativo17@gmail.com> - 1.0.2-2.20170123gitc4a14d3
+- Update to latest snapshot.
+- Fix Intel QSV build.
+
 * Tue Jan 03 2017 Simone Caronni <negativo17@gmail.com> - 1.0.2-1.20170102git063446f
 - Update to latest snapshot of the 1.0.x branch.
 
