@@ -1,5 +1,5 @@
-%global commit0 c4a14d3465d4bc663bdb0ad061cba21eeef44afd
-%global date 20170123
+%global commit0 b2f8318069349d161d8c0f1afcb753f5513a3794
+%global date 2017022
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
@@ -10,8 +10,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.0.2
-Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.0.3
+Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -235,6 +235,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Feb 27 2017 Simone Caronni <negativo17@gmail.com> - 1.0.3-1.2017022gitb2f8318
+- Update to latest snapshot.
+
 * Tue Jan 24 2017 Simone Caronni <negativo17@gmail.com> - 1.0.2-2.20170123gitc4a14d3
 - Update to latest snapshot.
 - Fix Intel QSV build.
