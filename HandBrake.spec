@@ -1,5 +1,5 @@
-%global commit0 b2f8318069349d161d8c0f1afcb753f5513a3794
-%global date 2017022
+%global commit0 e4a9a3eed6237fc1aa0f907f3e86a289bd2aec60
+%global date 20170318
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0.3
-Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -32,8 +32,10 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # https://github.com/HandBrake/HandBrake/pull/32
 Patch0:         https://github.com/SeanMcG/HandBrake/commit/cf1571f3bf314638a608784f19f80edb736e8144.patch
 
+%if 0%{?fedora} <= 25
 # Build with unpatched libbluray
 Patch1:         HandBrake-no_clip_id.patch
+%endif
 # Use system OpenCL headers
 Patch2:         HandBrake-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
@@ -137,7 +139,9 @@ This package contains the command line version of the program.
 %prep
 %setup -qn %{name}-%{commit0}
 %{?_with_ffmpeg:%patch0 -p1}
+%if 0%{?fedora} <= 25
 %patch1 -p1
+%endif
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -235,6 +239,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Mar 22 2017 Simone Caronni <negativo17@gmail.com> - 1.0.3-2.20170318gite4a9a3e
+- Update to latest snapshot.
+- Apply libbluray patch only where libbluray < 1.0.0.
+
 * Mon Feb 27 2017 Simone Caronni <negativo17@gmail.com> - 1.0.3-1.2017022gitb2f8318
 - Update to latest snapshot.
 
