@@ -1,0 +1,14 @@
+diff -Naur HandBrake-c4a14d3465d4bc663bdb0ad061cba21eeef44afd.old/test/module.defs HandBrake-c4a14d3465d4bc663bdb0ad061cba21eeef44afd/test/module.defs
+--- HandBrake-c4a14d3465d4bc663bdb0ad061cba21eeef44afd.old/test/module.defs	2017-01-23 22:00:15.000000000 +0100
++++ HandBrake-c4a14d3465d4bc663bdb0ad061cba21eeef44afd/test/module.defs	2017-01-24 20:13:52.331233862 +0100
+@@ -25,9 +25,7 @@
+ 
+ ifeq (1,$(FEATURE.qsv))
+     TEST.GCC.D += USE_QSV HAVE_THREADS=1
+-ifeq ($(BUILD.system),linux)
+-    TEST.GCC.l += va va-drm
+-endif
++    TEST.GCC.l += va-drm
+ endif
+ 
+ ifeq (1,$(FEATURE.x265))
