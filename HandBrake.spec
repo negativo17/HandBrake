@@ -1,5 +1,5 @@
-%global commit0 e4a9a3eed6237fc1aa0f907f3e86a289bd2aec60
-%global date 20170318
+%global commit0 0a8dde9d78fc57ef19e53f50405e9a3124802267
+%global date 20170410
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Build with "--with ffmpeg" or enable this to use system FFMpeg libraries
@@ -10,8 +10,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.0.3
-Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.0.7
+Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -174,12 +174,13 @@ echo "GCC.args.g.none = " >> custom.defs
 # Not an autotools configure script.
 ./configure \
     --build build \
-    --prefix=%{_prefix} \
-    --verbose \
+    --disable-df-fetch \
     --disable-gtk-update-checks \
-    --enable-x265 \
     --enable-fdk-aac \
-    --enable-qsv
+    --enable-qsv \
+    --enable-x265 \
+    --prefix=%{_prefix} \
+    --verbose
 
 make -C build %{?_smp_mflags}
 
@@ -239,6 +240,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Apr 11 2017 Simone Caronni <negativo17@gmail.com> - 1.0.7-1.20170410git0a8dde9
+- Update to latest snapshot.
+
 * Wed Mar 22 2017 Simone Caronni <negativo17@gmail.com> - 1.0.3-2.20170318gite4a9a3e
 - Update to latest snapshot.
 - Apply libbluray patch only where libbluray < 1.0.0.
