@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.0.7
-Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -93,7 +93,6 @@ BuildRequires:  patch
 BuildRequires:  python
 BuildRequires:  subversion
 BuildRequires:  tar
-BuildRequires:  webkitgtk3-devel
 BuildRequires:  wget
 BuildRequires:  x264-devel >= 1:0.148
 BuildRequires:  x265-devel >= 1:2.1-2
@@ -240,6 +239,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Apr 12 2017 Simone Caronni <negativo17@gmail.com> - 1.0.7-2.20170410git0a8dde9
+- Remove webkitgtk3 build requirement, it's actually used only when the update
+  checks are enabled in the gui (not needed in our case and removed in fc27).
+
 * Tue Apr 11 2017 Simone Caronni <negativo17@gmail.com> - 1.0.7-1.20170410git0a8dde9
 - Update to latest snapshot.
 
