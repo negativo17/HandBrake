@@ -41,6 +41,8 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 
 %{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.tar.gz}
 
+# Build with unpatched libbluray
+Patch0:         %{name}-no_clip_id.patch
 # Use system OpenCL headers
 Patch1:         %{name}-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
@@ -76,7 +78,8 @@ BuildRequires:  libdvdnav-devel >= 5.0.1
 BuildRequires:  libdvdread-devel >= 5.0.0
 # FDK is non-free
 %{?_with_fdk:BuildRequires:  libfdk-aac-devel >= 0.1.4}
-BuildRequires:  libgudev-devel
+# On Fedora, libgudev provides libgudev1
+BuildRequires:  libgudev1-devel
 %if 0%{?_with_mfx:1}
 BuildRequires:  libmfx-devel >= 1.16
 #BuildRequires:  libva-devel
@@ -149,6 +152,9 @@ This package contains the command line version of the program.
 
 %prep
 %setup -q %{!?tag:-n %{name}-%{commit0}}
+%if 0%{?fedora} <= 25
+%patch0 -p1
+%endif
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
