@@ -195,7 +195,11 @@ echo "GCC.args.g.none = " >> custom.defs
     --prefix=%{_prefix} \
     --verbose
 
+%if 0%{?fedora} == 24 || 0%{?fedora} == 25
+make -C build V=1
+%else
 %make_build -C build V=1
+%endif
 
 %install
 %make_install -C build
