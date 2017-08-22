@@ -1,5 +1,5 @@
-%global commit0 7f17f5c08129a39da12352828d6ec145dc448261
-%global date 20170511
+%global commit0 9fd048196eb423965496c14dac683e6e2546e14f
+%global date 20170819
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -19,8 +19,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.0.8
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.1.0
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -39,7 +39,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # cd build
 # make contrib.fetch
 
-%{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.tar.gz}
+%{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.1.tar.gz}
 
 # Build with unpatched libbluray
 Patch0:         %{name}-no_clip_id.patch
@@ -50,7 +50,7 @@ Patch2:         %{name}-nostrip.patch
 # Don't link with libva unnecessarily
 Patch3:         %{name}-no-libva.patch
 
-BuildRequires:  a52dec-devel >= 0.7.4
+BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
@@ -64,20 +64,20 @@ BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc
 BuildRequires:  gstreamer1-plugins-base-devel
-# Should be >= 1.3.0
+# Should be >= 1.4.6
 BuildRequires:  harfbuzz-devel
 BuildRequires:  intltool
 BuildRequires:  jansson-devel
-BuildRequires:  lame-devel >= 3.98
+BuildRequires:  lame-devel >= 3.99.5
 BuildRequires:  libappindicator-gtk3-devel
-# Should be >= 0.13.2:
+# Should be >= 0.13.7:
 BuildRequires:  libass-devel >= 0.13.1
 # Contains a required patch for HandBrake 1.0:
 BuildRequires:  libbluray-devel >= 0.9.3-2
-BuildRequires:  libdvdnav-devel >= 5.0.1
-BuildRequires:  libdvdread-devel >= 5.0.0
+BuildRequires:  libdvdnav-devel >= 5.0.3
+BuildRequires:  libdvdread-devel >= 5.0.3
 # FDK is non-free
-%{?_with_fdk:BuildRequires:  libfdk-aac-devel >= 0.1.4}
+%{?_with_fdk:BuildRequires:  libfdk-aac-devel >= 0.1.5}
 # On Fedora, libgudev provides libgudev1
 BuildRequires:  libgudev1-devel
 %if 0%{?_with_mfx:1}
@@ -99,7 +99,7 @@ BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
 BuildRequires:  opencl-headers
-# Should be >= 1.1.3:
+# Should be >= 1.2.1:
 BuildRequires:  opus-devel
 BuildRequires:  patch
 BuildRequires:  python
@@ -255,6 +255,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Aug 22 2017 Simone Caronni <negativo17@gmail.com> - 1.1.0-2.20170819git9fd0481
+- Update to latest snapshot.
+
+* Mon Jun 26 2017 Simone Caronni <negativo17@gmail.com> - 1.1.0-1.20170624gitf9f999c
+- Update to latest snapshot.
+
 * Sun May 14 2017 Simone Caronni <negativo17@gmail.com> - 1.0.8-1.20170511git7f17f5c
 - Update to latest snapshot.
 - Provide lowercase handbrake/handbrake-gui and handbrake-cli.

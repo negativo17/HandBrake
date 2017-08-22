@@ -1,6 +1,6 @@
-diff -Naur HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/internal.h HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/internal.h
---- HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/internal.h	2017-01-03 11:29:29.842184912 +0100
-+++ HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/internal.h	2017-01-03 11:29:39.975386620 +0100
+diff -Naur HandBrake-9fd048196eb423965496c14dac683e6e2546e14f.old/libhb/internal.h HandBrake-9fd048196eb423965496c14dac683e6e2546e14f/libhb/internal.h
+--- HandBrake-9fd048196eb423965496c14dac683e6e2546e14f.old/libhb/internal.h	2017-08-22 16:40:31.673581142 +0200
++++ HandBrake-9fd048196eb423965496c14dac683e6e2546e14f/libhb/internal.h	2017-08-22 16:40:46.382856068 +0200
 @@ -8,7 +8,7 @@
   */
  
@@ -10,39 +10,3 @@ diff -Naur HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/internal
  #ifdef USE_QSV
  #include "qsv_libav.h"
  #endif
-diff -Naur HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/opencl.h HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/opencl.h
---- HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/opencl.h	2017-01-03 11:29:29.842184912 +0100
-+++ HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/opencl.h	2017-01-03 11:29:39.976386640 +0100
-@@ -10,7 +10,7 @@
- #ifndef HB_OPENCL_H
- #define HB_OPENCL_H
- 
--#include "extras/cl.h"
-+#include <CL/cl.h>
- #include "openclwrapper.h"
- 
- // we only support OpenCL 1.1 or later
-diff -Naur HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/openclwrapper.c HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/openclwrapper.c
---- HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/openclwrapper.c	2017-01-03 11:29:29.842184912 +0100
-+++ HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/openclwrapper.c	2017-01-03 11:29:39.978386680 +0100
-@@ -13,7 +13,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
--#include "extras/cl.h"
-+#include <CL/cl.h>
- #include "opencl.h"
- #include "openclwrapper.h"
- #include "openclkernels.h"
-diff -Naur HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/openclwrapper.h HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/openclwrapper.h
---- HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376.old/libhb/openclwrapper.h	2017-01-03 11:29:29.842184912 +0100
-+++ HandBrake-063446fa62266cea2d6a0487e8814bf5f2dba376/libhb/openclwrapper.h	2017-01-03 11:29:39.978386680 +0100
-@@ -15,7 +15,7 @@
- #define HB_OPENCL_WRAPPER_H
- 
- #include "common.h"
--#include "extras/cl.h"
-+#include <CL/cl.h>
- 
- //support AMD opencl
- #define CL_QUEUE_THREAD_HANDLE_AMD 0x403E
