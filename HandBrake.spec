@@ -183,6 +183,7 @@ export http_proxy=http://127.0.0.1
 # debug options.
 echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 %{?_with_fdk:-lfdk-aac} %{?_with_mfx:-lmfx} -lva -lva-drm" > custom.defs
 echo "GCC.args.g.none = " >> custom.defs
+echo "GCC.args.strip = " >> custom.defs
 
 # Not an autotools configure script.
 ./configure \
@@ -257,6 +258,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Fri Oct 27 2017 Simone Caronni <negativo17@gmail.com> - 1.1.0-3.20171020gitc22e7ed
 - Update to latest 1.1 snapshot.
+- Adjust GCC flags.
 
 * Tue Aug 22 2017 Simone Caronni <negativo17@gmail.com> - 1.1.0-2.20170819git9fd0481
 - Update to latest snapshot.
