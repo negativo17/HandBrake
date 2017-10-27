@@ -1,5 +1,5 @@
-%global commit0 9fd048196eb423965496c14dac683e6e2546e14f
-%global date 20170819
+%global commit0 c22e7ed3614ce541d1038d5d8eb0eb06431047b4
+%global date 20171020
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -20,7 +20,7 @@
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -39,7 +39,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # cd build
 # make contrib.fetch
 
-%{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.1.tar.gz}
+%{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.2.tar.gz}
 
 # Build with unpatched libbluray
 Patch0:         %{name}-no_clip_id.patch
@@ -255,6 +255,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri Oct 27 2017 Simone Caronni <negativo17@gmail.com> - 1.1.0-3.20171020gitc22e7ed
+- Update to latest 1.1 snapshot.
+
 * Tue Aug 22 2017 Simone Caronni <negativo17@gmail.com> - 1.1.0-2.20170819git9fd0481
 - Update to latest snapshot.
 
