@@ -1,5 +1,5 @@
-%global commit0 c22e7ed3614ce541d1038d5d8eb0eb06431047b4
-%global date 20171020
+%global commit0 9bd2b8e50ca2e8e0b52580714b54dbca33b809a5
+%global date 20180111
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -20,7 +20,7 @@
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -58,22 +58,21 @@ BuildRequires:  desktop-file-utils
 # Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
 %{!?_without_ffmpeg:BuildRequires:  ffmpeg-devel >= 3.0}
-# Should be >= 2.6.5:
+# Should be >= 2.8.1:
 BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc
 BuildRequires:  gstreamer1-plugins-base-devel
-# Should be >= 1.4.6
+# Should be >= 1.7.2
 BuildRequires:  harfbuzz-devel
 BuildRequires:  intltool
 BuildRequires:  jansson-devel
-BuildRequires:  lame-devel >= 3.99.5
+BuildRequires:  lame-devel >= 3.100
 BuildRequires:  libappindicator-gtk3-devel
-# Should be >= 0.13.7:
-BuildRequires:  libass-devel >= 0.13.1
-# Contains a required patch for HandBrake 1.0:
-BuildRequires:  libbluray-devel >= 0.9.3-2
+# Should be >= 0.14.0:
+BuildRequires:  libass-devel >= 0.13.4
+BuildRequires:  libbluray-devel >= 1.0.2
 BuildRequires:  libdvdnav-devel >= 5.0.3
 BuildRequires:  libdvdread-devel >= 5.0.3
 # FDK is non-free
@@ -81,6 +80,7 @@ BuildRequires:  libdvdread-devel >= 5.0.3
 # On Fedora, libgudev provides libgudev1
 BuildRequires:  libgudev1-devel
 %if 0%{?_with_mfx:1}
+# Should be >= 1.23
 BuildRequires:  libmfx-devel >= 1.16
 #BuildRequires:  libva-devel
 %endif
@@ -107,7 +107,7 @@ BuildRequires:  subversion
 BuildRequires:  tar
 BuildRequires:  wget
 BuildRequires:  x264-devel >= 1:0.148
-BuildRequires:  x265-devel >= 1:2.1-2
+BuildRequires:  x265-devel >= 1:2.6
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
 
@@ -256,6 +256,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Jan 11 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-4.20180111git9bd2b8e
+- Update to latest snapshot.
+
 * Fri Oct 27 2017 Simone Caronni <negativo17@gmail.com> - 1.1.0-3.20171020gitc22e7ed
 - Update to latest 1.1 snapshot.
 - Adjust GCC flags.
