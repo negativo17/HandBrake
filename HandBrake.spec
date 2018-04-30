@@ -1,32 +1,19 @@
 %global commit0 9bd2b8e50ca2e8e0b52580714b54dbca33b809a5
 %global date 20180111
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
-
-# Build with "--without ffmpeg" or enable this to use bundled libAV
-# instead of system FFMpeg libraries. Unfortunately with FFMpeg UTF-8
-# subtitles are not recognized in media source files. :(
-# https://trac.ffmpeg.org/ticket/6304
-%global _without_ffmpeg 1
-
-%ifarch i686 x86_64
-%global _with_mfx 1
-%endif
-
-# Enable non-free FDK-AAC encoder
-%global _with_fdk 1
+%global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        5%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
 
 %if 0%{?tag:1}
-Source0:        https://handbrake.fr/rotation.php?file=%{name}-%{version}.tar.bz2#/%{name}-%{version}.tar.bz2
+Source0:        https://download2.handbrake.fr/%{version}/%{name}-%{version}-source.tar.bz2#/%{name}-%{version}.tar.bz2
 %else
 Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
@@ -39,16 +26,12 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # cd build
 # make contrib.fetch
 
-%{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.2.tar.gz}
-
-# Build with unpatched libbluray
-Patch0:         %{name}-no_clip_id.patch
 # Use system OpenCL headers
 Patch1:         %{name}-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
 Patch2:         %{name}-nostrip.patch
-# Don't link with libva unnecessarily
-Patch3:         %{name}-no-libva.patch
+# Fix SubRip subtitle issue when built with FFmpeg
+Patch3:         https://trac.ffmpeg.org/raw-attachment/ticket/6304/handbrake_subrip.patch#/%{name}-subrip.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
@@ -57,17 +40,17 @@ BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 # Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
-%{!?_without_ffmpeg:BuildRequires:  ffmpeg-devel >= 3.0}
+BuildRequires:  ffmpeg-devel >= 4.0
 # Should be >= 2.8.1:
 BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc
 BuildRequires:  gstreamer1-plugins-base-devel
-# Should be >= 1.7.2
-BuildRequires:  harfbuzz-devel
+# Should be >= 1.7.2:
+BuildRequires:  harfbuzz-devel >= 1.3.2
 BuildRequires:  intltool
-BuildRequires:  jansson-devel
+BuildRequires:  jansson-devel >= 2.10
 BuildRequires:  lame-devel >= 3.100
 BuildRequires:  libappindicator-gtk3-devel
 # Should be >= 0.14.0:
@@ -75,32 +58,32 @@ BuildRequires:  libass-devel >= 0.13.4
 BuildRequires:  libbluray-devel >= 1.0.2
 BuildRequires:  libdvdnav-devel >= 5.0.3
 BuildRequires:  libdvdread-devel >= 5.0.3
-# FDK is non-free
-%{?_with_fdk:BuildRequires:  libfdk-aac-devel >= 0.1.5}
-# On Fedora, libgudev provides libgudev1
+BuildRequires:  libfdk-aac-devel >= 0.1.5
+# On Fedora, libgudev provides libgudev1:
 BuildRequires:  libgudev1-devel
-%if 0%{?_with_mfx:1}
-# Should be >= 1.23
-BuildRequires:  libmfx-devel >= 1.16
+# Should be >= 1.23:
+BuildRequires:  libmfx-devel >= 1.21
 #BuildRequires:  libva-devel
-%endif
 BuildRequires:  libmpeg2-devel >= 0.5.1
 BuildRequires:  libnotify-devel
-BuildRequires:  libogg-devel
+# Should be >= 1.3.2:
+BuildRequires:  libogg-devel >= 1.3.0
 BuildRequires:  librsvg2-devel
-BuildRequires:  libsamplerate-devel
-BuildRequires:  libtheora-devel
+# Should be >= 0.1.9:
+BuildRequires:  libsamplerate-devel >= 0.1.8
+BuildRequires:  libtheora-devel >= 1.1.1
 BuildRequires:  libtool
 BuildRequires:  libva-devel
-BuildRequires:  libvorbis-devel
-# Should be >= 1.5.0:
+# Should be >= 1.3.5:
+BuildRequires:  libvorbis-devel >= 1.3.3
+# Should be >= 1.6.1:
 BuildRequires:  libvpx-devel >= 1.3
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
 BuildRequires:  opencl-headers
 # Should be >= 1.2.1:
-BuildRequires:  opus-devel
+BuildRequires:  opus-devel >= 1.0.2
 BuildRequires:  patch
 BuildRequires:  python
 BuildRequires:  subversion
@@ -112,7 +95,6 @@ BuildRequires:  yasm
 BuildRequires:  zlib-devel
 
 Requires:       hicolor-icon-theme
-%{?_without_ffmpeg:Provides: bundled(libav) = 12}
 
 %description
 %{name} is a general-purpose, free, open-source, cross-platform, multithreaded
@@ -151,18 +133,11 @@ protection.
 This package contains the command line version of the program.
 
 %prep
-%setup -q %{!?tag:-n %{name}-%{commit0}}
-%if 0%{?fedora} <= 25
-%patch0 -p1
-%endif
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
+%autosetup -p1 %{!?tag:-n %{name}-%{commit0}}
 mkdir -p download
-%{?_without_ffmpeg:cp -p %{SOURCE10} download}
 
 # Use system libraries in place of bundled ones
-for module in a52dec %{?_with_fdk:fdk-aac} %{!?_without_ffmpeg:ffmpeg} libdvdnav libdvdread libbluray %{?_with_mfx:libmfx} libvpx x265; do
+for module in a52dec fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpx x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 rm libhb/extras/cl{,_platform}.h
@@ -174,6 +149,10 @@ sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
 echo "HASH=%{commit0}" > version.txt
 echo "SHORTHASH=%{shortcommit0}" >> version.txt
 echo "DATE=$(date "+%Y-%m-%d %T")" >> version.txt
+%if 0%{?tag:1}
+echo "TAG=%{tag}" >> version.txt
+echo "TAG_HASH=%{commit0}" >> version.txt
+%endif
 
 # This makes build stop if any download is attempted
 export http_proxy=http://127.0.0.1
@@ -181,7 +160,7 @@ export http_proxy=http://127.0.0.1
 # By default the project is built with optimizations for speed and no debug.
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 # debug options.
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 %{?_with_fdk:-lfdk-aac} %{?_with_mfx:-lmfx} -lva -lva-drm" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx" > custom.defs
 echo "GCC.args.g.none = " >> custom.defs
 echo "GCC.args.strip = " >> custom.defs
 
@@ -190,17 +169,13 @@ echo "GCC.args.strip = " >> custom.defs
     --build build \
     --disable-df-fetch \
     --disable-gtk-update-checks \
-    %{?_with_fdk:--enable-fdk-aac} \
-    %{?_with_mfx:--enable-qsv} \
+    --enable-fdk-aac \
+    --enable-qsv \
     --enable-x265 \
     --prefix=%{_prefix} \
     --verbose
 
-%if 0%{?fedora} == 24 || 0%{?fedora} == 25
-make -C build V=1
-%else
 %make_build -C build V=1
-%endif
 
 %install
 %make_install -C build
@@ -220,23 +195,21 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.deskto
 
 %find_lang ghb
 
+%if 0%{?rhel} == 7
 %post gui
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-%if 0%{?fedora} <= 24 || 0%{?rhel}
 /usr/bin/update-desktop-database &> /dev/null || :
-%endif
 
 %postun gui
 if [ $1 -eq 0 ] ; then
     touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
-%if 0%{?fedora} <= 24 || 0%{?rhel}
 /usr/bin/update-desktop-database &> /dev/null || :
-%endif
 
 %posttrans gui
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%endif
 
 %files -f ghb.lang gui
 %license COPYING
@@ -256,6 +229,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Apr 30 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-5
+- Update to final 1.1.0 release.
+- Update SPEC file.
+- Update build requirements.
+- Add FFMpeg patch for subtitles, drop libav option.
+
 * Thu Jan 11 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-4.20180111git9bd2b8e
 - Update to latest snapshot.
 
