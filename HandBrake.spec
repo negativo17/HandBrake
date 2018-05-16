@@ -3,11 +3,17 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global tag %{version}
 
+# Build with "--without ffmpeg" or enable this to use bundled libAV
+# instead of system FFMpeg libraries. As of 16th May 2018 still getting
+# "Subtitle codec 94212 is not supported" for some UTF-8 subtitles.
+# https://trac.ffmpeg.org/ticket/6304
+%global _without_ffmpeg 1
+
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        5%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -26,12 +32,14 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # cd build
 # make contrib.fetch
 
+%{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.3.tar.gz}
+
 # Use system OpenCL headers
 Patch1:         %{name}-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
 Patch2:         %{name}-nostrip.patch
 # Fix SubRip subtitle issue when built with FFmpeg
-Patch3:         https://trac.ffmpeg.org/raw-attachment/ticket/6304/handbrake_subrip.patch#/%{name}-subrip.patch
+%{!?_without_ffmpeg:Patch3:         https://trac.ffmpeg.org/raw-attachment/ticket/6304/handbrake_subrip.patch#/%{name}-subrip.patch}
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
@@ -40,7 +48,7 @@ BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 # Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
-BuildRequires:  ffmpeg-devel >= 4.0
+%{!?_without_ffmpeg:BuildRequires:  ffmpeg-devel >= 4.0}
 # Should be >= 2.8.1:
 BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
@@ -135,9 +143,10 @@ This package contains the command line version of the program.
 %prep
 %autosetup -p1 %{!?tag:-n %{name}-%{commit0}}
 mkdir -p download
+%{?_without_ffmpeg:cp -p %{SOURCE10} download}
 
 # Use system libraries in place of bundled ones
-for module in a52dec fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpx x265; do
+for module in a52dec fdk-aac %{!?_without_ffmpeg:ffmpeg} libdvdnav libdvdread libbluray libmfx libvpx x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 rm libhb/extras/cl{,_platform}.h
@@ -229,6 +238,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed May 16 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-6
+- Allow building again with bundled libav, still getting errors on some UTF-8
+  subtitles.
+
 * Mon Apr 30 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-5
 - Update to final 1.1.0 release.
 - Update SPEC file.
