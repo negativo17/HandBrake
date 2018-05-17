@@ -7,13 +7,13 @@
 # instead of system FFMpeg libraries. As of 16th May 2018 still getting
 # "Subtitle codec 94212 is not supported" for some UTF-8 subtitles.
 # https://trac.ffmpeg.org/ticket/6304
-%global _without_ffmpeg 1
+#global _without_ffmpeg 1
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -39,7 +39,7 @@ Patch1:         %{name}-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
 Patch2:         %{name}-nostrip.patch
 # Fix SubRip subtitle issue when built with FFmpeg
-%{!?_without_ffmpeg:Patch3:         https://trac.ffmpeg.org/raw-attachment/ticket/6304/handbrake_subrip.patch#/%{name}-subrip.patch}
+%{!?_without_ffmpeg:Patch3:         %{name}-subrip.patch}
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
@@ -238,6 +238,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu May 17 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-7
+- Update subtitles patch.
+
 * Wed May 16 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-6
 - Allow building again with bundled libav, still getting errors on some UTF-8
   subtitles.
