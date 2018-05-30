@@ -1,7 +1,7 @@
-%global commit0 9bd2b8e50ca2e8e0b52580714b54dbca33b809a5
-%global date 20180111
+%global commit0 49f21c9596d91e742f2b2f4a5d5623f6c73ad506
+%global date 20180530
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global tag %{version}
+#global tag %{version}
 
 # Build with "--without ffmpeg" or enable this to use bundled libAV
 # instead of system FFMpeg libraries. As of 16th May 2018 still getting
@@ -13,7 +13,7 @@
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        8%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -32,14 +32,10 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # cd build
 # make contrib.fetch
 
-%{?_without_ffmpeg:Source10:       https://libav.org/releases/libav-12.3.tar.gz}
-
 # Use system OpenCL headers
 Patch1:         %{name}-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
 Patch2:         %{name}-nostrip.patch
-# Fix SubRip subtitle issue when built with FFmpeg
-%{!?_without_ffmpeg:Patch3:         %{name}-subrip.patch}
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
@@ -48,7 +44,7 @@ BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 # Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
-%{!?_without_ffmpeg:BuildRequires:  ffmpeg-devel >= 4.0}
+BuildRequires:  ffmpeg-devel >= 4.0
 # Should be >= 2.8.1:
 BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
@@ -94,6 +90,7 @@ BuildRequires:  opencl-headers
 BuildRequires:  opus-devel >= 1.0.2
 BuildRequires:  patch
 BuildRequires:  python
+BuildRequires:  speex-devel >= 1.2
 BuildRequires:  subversion
 BuildRequires:  tar
 BuildRequires:  wget
@@ -118,7 +115,6 @@ Requires:       gstreamer1-plugins-good%{_isa}
 Requires:       hicolor-icon-theme
 Requires:       libdvdcss%{_isa}
 
-
 %description gui
 %{name} is a general-purpose, free, open-source, cross-platform, multithreaded
 video transcoder software application. It can process most common multimedia
@@ -141,12 +137,15 @@ protection.
 This package contains the command line version of the program.
 
 %prep
-%autosetup -p1 %{!?tag:-n %{name}-%{commit0}}
+%if 0%{?tag:1}
+%autosetup -p1
+%else
+%autosetup -p1 -n %{name}-%{commit0}
+%endif
 mkdir -p download
-%{?_without_ffmpeg:cp -p %{SOURCE10} download}
 
 # Use system libraries in place of bundled ones
-for module in a52dec fdk-aac %{!?_without_ffmpeg:ffmpeg} libdvdnav libdvdread libbluray libmfx libvpx x265; do
+for module in a52dec fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpx x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 rm libhb/extras/cl{,_platform}.h
@@ -238,6 +237,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed May 30 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-8.20180530git49f21c9
+- Update to latest snapshot, FFmpeg support merged in.
+
 * Thu May 17 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-7
 - Update subtitles patch.
 
