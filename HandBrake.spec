@@ -1,5 +1,5 @@
-%global commit0 49f21c9596d91e742f2b2f4a5d5623f6c73ad506
-%global date 20180530
+%global commit0 b5d46bedd1ff23ed8cf0ce05f5ee41acf56c490a
+%global date 20180611
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -13,7 +13,7 @@
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        8%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        9%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -196,8 +196,6 @@ install -D -p -m 644 gtk/src/%{desktop_id}.desktop \
     %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
 install -D -p -m 644 gtk/src/%{desktop_id}.svg \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
-install -D -p -m 644 gtk/src/%{desktop_id}.appdata.xml \
-    %{buildroot}/%{_datadir}/appdata/%{desktop_id}.appdata.xml
 
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
 
@@ -224,9 +222,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/ghb
 %if 0%{?fedora} || 0%{?rhel} >= 7
-%{_datadir}/appdata/%{desktop_id}.appdata.xml
+%{_datadir}/metainfo/%{desktop_id}.appdata.xml
 %else
-%exclude %{_datadir}/appdata/%{desktop_id}.appdata.xml
+%exclude %{_datadir}/metainfo/%{desktop_id}.appdata.xml
 %endif
 %{_datadir}/applications/%{desktop_id}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
@@ -237,6 +235,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Jun 11 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-9.20180611gitb5d46be
+- Update to latest snapshot.
+- Update AppData packaging.
+
 * Wed May 30 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-8.20180530git49f21c9
 - Update to latest snapshot, FFmpeg support merged in.
 
