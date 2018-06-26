@@ -1,8 +1,8 @@
-diff -up HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules.nostrip HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules
---- HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules.nostrip	2016-08-03 22:46:47.000000000 +0200
-+++ HandBrake-6b5d91aef5ba0fde44ab5960f643e6e5da509642/gtk/module.rules	2016-08-22 09:47:47.465186383 +0200
-@@ -18,6 +18,7 @@ $(GTK.CONFIGURE.stamp): $(GTK.src/)confi
- 		PKG_CONFIG_PATH=$(BUILD/)contrib/lib/pkgconfig \
+diff -Naur HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05.old/gtk/module.rules HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05/gtk/module.rules
+--- HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05.old/gtk/module.rules	2018-06-26 09:34:37.237324058 +0200
++++ HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05/gtk/module.rules	2018-06-26 09:34:44.330451765 +0200
+@@ -18,6 +18,7 @@
+ 		PKG_CONFIG_PATH=$(BUILD/)contrib/lib/pkgconfig:$(PKG_CONFIG_PATH) \
  	    CFLAGS="$(call fn.ARGS,GTK.GCC,.g .O *D ?extra)" \
  	    LDFLAGS="$(call fn.ARGS,GTK.GCC,?strip .g .O ?extra.exe)" \
 +	    STRIP="$(STRIP.exe)" \
