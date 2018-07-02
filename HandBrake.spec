@@ -1,5 +1,5 @@
-%global commit0 d849b13e0717396b379fb3dc3b46e85cd18a6d05
-%global date 20180621
+%global commit0 7ceb4dda6383044cc80c9c6d101ba3f2ff8df174
+%global date 20180702
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -13,7 +13,7 @@
 
 Name:           HandBrake
 Version:        1.1.0
-Release:        11%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        12%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -85,6 +85,7 @@ BuildRequires:  libvpx-devel >= 1.3
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
+BuildRequires:  nv-codec-headers >= 8.1.24.2
 BuildRequires:  opencl-headers
 # Should be >= 1.2.1:
 BuildRequires:  opus-devel >= 1.0.2
@@ -178,6 +179,7 @@ echo "GCC.args.strip = " >> custom.defs
     --disable-df-fetch \
     --disable-gtk-update-checks \
     --enable-fdk-aac \
+    --enable-nvenc \
     --enable-qsv \
     --enable-x265 \
     --prefix=%{_prefix} \
@@ -235,6 +237,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Jul 04 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-12.20180702git7ceb4dd
+- Update to latest snapshot.
+- Enable NVENC.
+
 * Fri Jun 22 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-11.20180621gitd849b13
 - Update to latest snapshot.
 
