@@ -1,5 +1,5 @@
-%global commit0 7ceb4dda6383044cc80c9c6d101ba3f2ff8df174
-%global date 20180702
+%global commit0 3c303e2f2bcd429c07a558418b4a34a1061d908b
+%global date 20180714
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -12,8 +12,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.1.0
-Release:        12%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.2.0
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -23,14 +23,6 @@ Source0:        https://download2.handbrake.fr/%{version}/%{name}-%{version}-sou
 %else
 Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
-
-# The project fetches libraries to bundle in the executable at compile time; to
-# have them available before building, proceed as follows. All files will be
-# available in the "download" folder.
-#
-# ./configure
-# cd build
-# make contrib.fetch
 
 # Use system OpenCL headers
 Patch1:         %{name}-system-OpenCL.patch
@@ -96,7 +88,7 @@ BuildRequires:  subversion
 BuildRequires:  tar
 BuildRequires:  wget
 BuildRequires:  x264-devel >= 1:0.148
-BuildRequires:  x265-devel >= 1:2.6
+BuildRequires:  x265-devel >= 1:2.8
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
 
@@ -237,6 +229,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Jul 16 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-1.20180714git3c303e2
+- Update to latest snapshot.
+
 * Wed Jul 04 2018 Simone Caronni <negativo17@gmail.com> - 1.1.0-12.20180702git7ceb4dd
 - Update to latest snapshot.
 - Enable NVENC.
