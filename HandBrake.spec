@@ -161,7 +161,11 @@ export http_proxy=http://127.0.0.1
 # By default the project is built with optimizations for speed and no debug.
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 # debug options.
+%if 0%{?rhel} == 7
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx -std=gnu99" > custom.defs
+%else
 echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx" > custom.defs
+%endif
 echo "GCC.args.g.none = " >> custom.defs
 echo "GCC.args.strip = " >> custom.defs
 
