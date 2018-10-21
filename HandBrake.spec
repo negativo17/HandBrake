@@ -72,7 +72,11 @@ BuildRequires:  libtool
 BuildRequires:  libva-devel
 # Should be >= 1.3.5:
 BuildRequires:  libvorbis-devel >= 1.3.3
+%if 0%{?rhel} == 7
+BuildRequires:  libvpx1.7-devel
+%else
 BuildRequires:  libvpx-devel >= 1.6.1
+%endif
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
