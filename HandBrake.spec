@@ -1,5 +1,5 @@
-%global commit0 7310e70af440d38fa8979ddf301e0690a117b036
-%global date 20180921
+%global commit0 dd2de7fb4095a4774b780d560444c34704e36603
+%global date 20180821
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -13,7 +13,7 @@
 
 Name:           HandBrake
 Version:        1.2.0
-Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        5%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -72,8 +72,7 @@ BuildRequires:  libtool
 BuildRequires:  libva-devel
 # Should be >= 1.3.5:
 BuildRequires:  libvorbis-devel >= 1.3.3
-# Should be >= 1.6.1:
-BuildRequires:  libvpx-devel >= 1.3
+BuildRequires:  libvpx-devel >= 1.6.1
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
@@ -233,6 +232,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sun Oct 21 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-5.20180821gitdd2de7f
+- Update to latest snapshot.
+
 * Fri Sep 21 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-4.20180921git7310e70
 - Rebuild for updated dependencies.
 
