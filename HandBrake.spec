@@ -42,6 +42,7 @@ BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc
+BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
 # Should be >= 1.7.2:
 BuildRequires:  harfbuzz-devel >= 1.3.2
