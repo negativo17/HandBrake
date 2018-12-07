@@ -1,5 +1,5 @@
-%global commit0 2766a279df69b7dde72582b7793ac39090d8683c
-%global date 20181112
+%global commit0 677b88ebbf3cb736c9f02fc59e636e4944b084bd
+%global date 20181207
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -13,7 +13,7 @@
 
 Name:           HandBrake
 Version:        1.2.0
-Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -36,7 +36,7 @@ BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 # Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
-BuildRequires:  ffmpeg-devel >= 4.0
+BuildRequires:  ffmpeg-devel >= 4.1
 # Should be >= 2.8.1:
 BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
@@ -83,7 +83,7 @@ BuildRequires:  m4
 BuildRequires:  make
 BuildRequires:  nv-codec-headers >= 8.1.24.2
 BuildRequires:  opencl-headers
-# Should be >= 1.2.1:
+# Should be >= 1.3:
 BuildRequires:  opus-devel >= 1.0.2
 BuildRequires:  patch
 BuildRequires:  python
@@ -91,8 +91,9 @@ BuildRequires:  speex-devel >= 1.2
 BuildRequires:  subversion
 BuildRequires:  tar
 BuildRequires:  wget
-BuildRequires:  x264-devel >= 1:0.148
-BuildRequires:  x265-devel >= 1:2.8
+# Should be >= 155:
+BuildRequires:  x264-devel >= 1:0.152
+BuildRequires:  x265-devel >= 1:2.9
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
 
@@ -237,6 +238,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri Dec 07 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-7.20181207git677b88e
+- Update to latest snapshot.
+
 * Mon Nov 12 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-6.20181112git2766a27
 - Update to latest snapshot.
 
