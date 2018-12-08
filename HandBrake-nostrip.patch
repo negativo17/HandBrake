@@ -1,11 +1,11 @@
-diff -Naur HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05.old/gtk/module.rules HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05/gtk/module.rules
---- HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05.old/gtk/module.rules	2018-06-26 09:34:37.237324058 +0200
-+++ HandBrake-d849b13e0717396b379fb3dc3b46e85cd18a6d05/gtk/module.rules	2018-06-26 09:34:44.330451765 +0200
-@@ -18,6 +18,7 @@
- 		PKG_CONFIG_PATH=$(BUILD/)contrib/lib/pkgconfig:$(PKG_CONFIG_PATH) \
- 	    CFLAGS="$(call fn.ARGS,GTK.GCC,.g .O *D ?extra)" \
- 	    LDFLAGS="$(call fn.ARGS,GTK.GCC,?strip .g .O ?extra.exe)" \
-+	    STRIP="$(STRIP.exe)" \
- 	    --prefix=$(PREFIX) \
- 	    --with-hb=$(call fn.ABSOLUTE,$(BUILD/))
+diff -Naur HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd.old/gtk/module.rules HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd/gtk/module.rules
+--- HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd.old/gtk/module.rules	2018-12-08 09:18:47.414655246 +0100
++++ HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd/gtk/module.rules	2018-12-08 09:19:24.881320996 +0100
+@@ -22,6 +22,7 @@
+ 		CFLAGS="$(call fn.ARGS,GTK.GCC,.g .O *D ?extra)" \
+ 		LDFLAGS="$(call fn.ARGS,GTK.GCC,?strip .g .O ?extra.exe)" \
+ 		PYTHON="$(PYTHON.exe)" \
++		STRIP="$(STRIP.exe)" \
+ 		--prefix=$(PREFIX) \
+ 		--with-hb=$(call fn.ABSOLUTE,$(BUILD/))
  	$(TOUCH.exe) $@
