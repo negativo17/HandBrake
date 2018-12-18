@@ -1,7 +1,7 @@
-%global commit0 677b88ebbf3cb736c9f02fc59e636e4944b084bd
-%global date 20181207
+%global commit0 23bc08b55d58308862e940c97f2d1aeb0f07544b
+%global date 20181216
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
+%global tag %{version}
 
 # Build with "--without ffmpeg" or enable this to use bundled libAV
 # instead of system FFMpeg libraries. As of 16th May 2018 still getting
@@ -13,13 +13,13 @@
 
 Name:           HandBrake
 Version:        1.2.0
-Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        8%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
 
 %if 0%{?tag:1}
-Source0:        https://download2.handbrake.fr/%{version}/%{name}-%{version}-source.tar.bz2#/%{name}-%{version}.tar.bz2
+Source0:        https://github.com/%{name}/%{name}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 %else
 Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
@@ -238,6 +238,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Dec 18 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-8
+- Update to final 1.2.0 release.
+
 * Fri Dec 07 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-7.20181207git677b88e
 - Update to latest snapshot.
 
