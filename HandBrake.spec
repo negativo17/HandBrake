@@ -11,9 +11,13 @@
 
 %global desktop_id fr.handbrake.ghb
 
+%if 0%{?rhel} == 7
+%global _metainfodir %{_datadir}/metainfo
+%endif
+
 Name:           HandBrake
-Version:        1.2.0
-Release:        8%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.2.1
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -41,7 +45,6 @@ BuildRequires:  ffmpeg-devel >= 4.1
 BuildRequires:  freetype-devel >= 2.4.11
 # Should be >= 0.19.7:
 BuildRequires:  fribidi-devel >= 0.19.4
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
 # Should be >= 1.7.2:
@@ -81,6 +84,7 @@ BuildRequires:  libvpx-devel >= 1.6.1
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
+BuildRequires:  nasm
 BuildRequires:  nv-codec-headers >= 8.1.24.2
 BuildRequires:  opencl-headers
 # Should be >= 1.3:
@@ -96,6 +100,7 @@ BuildRequires:  x264-devel >= 1:0.152
 BuildRequires:  x265-devel >= 1:2.9
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
+BuildRequires:  xz-devel
 
 Requires:       hicolor-icon-theme
 
@@ -143,7 +148,7 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in a52dec fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpx x265; do
+for module in a52dec fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc libvpx x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 rm libhb/extras/cl{,_platform}.h
@@ -179,6 +184,7 @@ echo "GCC.args.strip = " >> custom.defs
     --build build \
     --disable-df-fetch \
     --disable-gtk-update-checks \
+    --enable-asm \
     --enable-fdk-aac \
     --enable-nvenc \
     --enable-qsv \
@@ -191,7 +197,7 @@ echo "GCC.args.strip = " >> custom.defs
 %install
 %make_install -C build
 
-# Desktop file, icons and AppStream metadata from FlatPak build (more complete)
+# Desktop file, icons from FlatPak build (more complete)
 rm -f %{buildroot}/%{_datadir}/applications/ghb.desktop \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
 
@@ -201,6 +207,11 @@ install -D -p -m 644 gtk/src/%{desktop_id}.svg \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
+
+# Do not install AppStream data on RHEL < 8 (_metainfodir) expands to share/appdata
+%if 0%{?rhel} == 7
+rm -fr %{buildroot}%{_metainfodir}
+%endif
 
 %find_lang ghb
 
@@ -224,10 +235,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %license COPYING
 %doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/ghb
-%if 0%{?fedora} || 0%{?rhel} >= 7
-%{_datadir}/metainfo/%{desktop_id}.appdata.xml
+%if 0%{?fedora} || 0%{?rhel} >= 8
+%{_metainfodir}/%{desktop_id}.appdata.xml
 %else
-%exclude %{_datadir}/metainfo/%{desktop_id}.appdata.xml
+%exclude %{_metainfodir}
 %endif
 %{_datadir}/applications/%{desktop_id}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
@@ -238,6 +249,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sat Feb 23 2019 Simone Caronni <negativo17@gmail.com> - 1.2.1-1
+- Update to 1.2.1.
+- Do not install AppData file on RHEL < 8.
+
 * Tue Dec 18 2018 Simone Caronni <negativo17@gmail.com> - 1.2.0-8
 - Update to final 1.2.0 release.
 
