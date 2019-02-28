@@ -17,7 +17,7 @@
 
 Name:           HandBrake
 Version:        1.2.1
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -249,6 +249,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Feb 28 2019 Simone Caronni <negativo17@gmail.com> - 1.2.1-2
+- Rebuild for updated dependencies.
+
 * Sat Feb 23 2019 Simone Caronni <negativo17@gmail.com> - 1.2.1-1
 - Update to 1.2.1.
 - Do not install AppData file on RHEL < 8.
