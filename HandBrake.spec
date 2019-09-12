@@ -17,7 +17,7 @@
 
 Name:           HandBrake
 Version:        1.2.2
-Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -32,6 +32,12 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 Patch1:         %{name}-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
 Patch2:         %{name}-nostrip.patch
+
+# Patches on the 1.2.x branch
+Patch3:         https://github.com/HandBrake/HandBrake/commit/f9d50c535fc8731d0220b36c09a39b5c5cccf276.patch
+Patch4:         https://github.com/HandBrake/HandBrake/commit/1ba1283d5653ca70395185b3cbcfc12595ecfca9.patch
+Patch5:         https://github.com/HandBrake/HandBrake/commit/5189e0d455286d6c203eb41bf542b4031b5ffd03.patch
+Patch6:         https://github.com/HandBrake/HandBrake/commit/adae7d42f0aad56858e343de1d8ae2149e8af455.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
@@ -249,6 +255,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Sep 12 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-4
+- Add patches from the 1.2.x branch.
+
 * Sun Jul 07 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-3
 - Rebuild for updated dependencies.
 
