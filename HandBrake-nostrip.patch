@@ -1,8 +1,8 @@
-diff -Naur HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd.old/gtk/module.rules HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd/gtk/module.rules
---- HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd.old/gtk/module.rules	2018-12-08 09:18:47.414655246 +0100
-+++ HandBrake-677b88ebbf3cb736c9f02fc59e636e4944b084bd/gtk/module.rules	2018-12-08 09:19:24.881320996 +0100
+diff -Naur HandBrake-b2d9b7cae68cdccdcd4f33c11bdeda98fbf37e18.old/gtk/module.rules HandBrake-b2d9b7cae68cdccdcd4f33c11bdeda98fbf37e18/gtk/module.rules
+--- HandBrake-b2d9b7cae68cdccdcd4f33c11bdeda98fbf37e18.old/gtk/module.rules	2019-09-13 07:13:50.529909913 +0200
++++ HandBrake-b2d9b7cae68cdccdcd4f33c11bdeda98fbf37e18/gtk/module.rules	2019-09-13 07:16:33.099888308 +0200
 @@ -22,6 +22,7 @@
- 		CFLAGS="$(call fn.ARGS,GTK.GCC,.g .O *D ?extra)" \
+ 		CFLAGS="$(call fn.ARGS,GTK.GCC,.g .O *D *W ?extra)" \
  		LDFLAGS="$(call fn.ARGS,GTK.GCC,?strip .g .O ?extra.exe)" \
  		PYTHON="$(PYTHON.exe)" \
 +		STRIP="$(STRIP.exe)" \

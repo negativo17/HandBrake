@@ -1,13 +1,7 @@
-%global commit0 23bc08b55d58308862e940c97f2d1aeb0f07544b
-%global date 20181216
+%global commit0 e2a9571535740938341ebe50d4fbf6747fd3e3c1
+%global date 20190914
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global tag %{version}
-
-# Build with "--without ffmpeg" or enable this to use bundled libAV
-# instead of system FFMpeg libraries. As of 16th May 2018 still getting
-# "Subtitle codec 94212 is not supported" for some UTF-8 subtitles.
-# https://trac.ffmpeg.org/ticket/6304
-#global _without_ffmpeg 1
+#global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
@@ -17,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.2.2
-Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        5%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -28,16 +22,8 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{version}.tar.gz#/%{
 Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
 
-# Use system OpenCL headers
-Patch1:         %{name}-system-OpenCL.patch
 # Pass strip tool override to gtk/configure
 Patch2:         %{name}-nostrip.patch
-
-# Patches on the 1.2.x branch
-Patch3:         https://github.com/HandBrake/HandBrake/commit/f9d50c535fc8731d0220b36c09a39b5c5cccf276.patch
-Patch4:         https://github.com/HandBrake/HandBrake/commit/1ba1283d5653ca70395185b3cbcfc12595ecfca9.patch
-Patch5:         https://github.com/HandBrake/HandBrake/commit/5189e0d455286d6c203eb41bf542b4031b5ffd03.patch
-Patch6:         https://github.com/HandBrake/HandBrake/commit/adae7d42f0aad56858e343de1d8ae2149e8af455.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
@@ -47,13 +33,13 @@ BuildRequires:  desktop-file-utils
 # Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
 BuildRequires:  ffmpeg-devel >= 4.1
-# Should be >= 2.8.1:
+# Should be >= 2.9.1:
 BuildRequires:  freetype-devel >= 2.4.11
-# Should be >= 0.19.7:
+# Should be >= 1.0.5:
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
-# Should be >= 1.7.2:
+# Should be >= 2.6.1:
 BuildRequires:  harfbuzz-devel >= 1.3.2
 BuildRequires:  intltool
 BuildRequires:  jansson-devel >= 2.10
@@ -96,6 +82,8 @@ BuildRequires:  opencl-headers
 # Should be >= 1.3:
 BuildRequires:  opus-devel >= 1.0.2
 BuildRequires:  patch
+BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
+BuildRequires:  pkgconfig(numa)
 BuildRequires:  python
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  subversion
@@ -154,10 +142,9 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in a52dec fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc libvpx x265; do
+for module in fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
-rm libhb/extras/cl{,_platform}.h
 
 # Fix desktop file
 sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
@@ -189,16 +176,19 @@ echo "GCC.args.strip = " >> custom.defs
 ./configure \
     --build build \
     --disable-df-fetch \
-    --disable-gtk-update-checks \
+    --disable-update-checks \
     --enable-asm \
     --enable-fdk-aac \
+    --enable-gst \
+    --enable-numa \
     --enable-nvenc \
     --enable-qsv \
     --enable-x265 \
     --prefix=%{_prefix} \
     --verbose
 
-%make_build -C build V=1
+#make_build -C build V=1
+make -C build V=1
 
 %install
 %make_install -C build
@@ -255,6 +245,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sat Sep 14 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-5.20190914gite2a9571
+- Update to latest snapshot.
+
 * Thu Sep 12 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-4
 - Add patches from the 1.2.x branch.
 
