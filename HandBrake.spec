@@ -26,7 +26,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 Patch2:         %{name}-nostrip.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
-BuildRequires:  cmake
+BuildRequires:  cmake3
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
@@ -84,7 +84,7 @@ BuildRequires:  opus-devel >= 1.0.2
 BuildRequires:  patch
 BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
 BuildRequires:  pkgconfig(numa)
-BuildRequires:  python
+BuildRequires:  python2
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  subversion
 BuildRequires:  tar
