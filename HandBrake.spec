@@ -1,5 +1,5 @@
-%global commit0 e2a9571535740938341ebe50d4fbf6747fd3e3c1
-%global date 20190914
+%global commit0 9901594fa20c59984459b316740ea9b3ca49b824
+%global date 20191018
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.2.2
-Release:        5%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -27,19 +27,20 @@ Patch2:         %{name}-nostrip.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake3
+# Should be >= 1.0.8:
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 # Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
-BuildRequires:  ffmpeg-devel >= 4.1
-# Should be >= 2.9.1:
+BuildRequires:  ffmpeg-devel >= 4.2.1
+# Should be >= 2.10.1:
 BuildRequires:  freetype-devel >= 2.4.11
-# Should be >= 1.0.5:
+# Should be >= 1.0.7:
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
-# Should be >= 2.6.1:
+# Should be >= 2.6.2:
 BuildRequires:  harfbuzz-devel >= 1.3.2
 BuildRequires:  intltool
 BuildRequires:  jansson-devel >= 2.10
@@ -47,10 +48,14 @@ BuildRequires:  lame-devel >= 3.100
 BuildRequires:  libappindicator-gtk3-devel
 # Should be >= 0.14.0:
 BuildRequires:  libass-devel >= 0.13.4
-BuildRequires:  libbluray-devel >= 1.0.2
+BuildRequires:  libbluray-devel >= 1.1.2
+# Should be >= 0.5.0:
+BuildRequires:  libdav1d-devel >= 0.3.0
+# Should be >= 6.0.1:
 BuildRequires:  libdvdnav-devel >= 5.0.3
+# Should be >= 6.0.2:
 BuildRequires:  libdvdread-devel >= 5.0.3
-BuildRequires:  libfdk-aac-devel >= 0.1.5
+BuildRequires:  libfdk-aac-devel >= 2.0.1
 # On Fedora, libgudev provides libgudev1:
 BuildRequires:  libgudev1-devel
 # Should be >= 1.23:
@@ -58,7 +63,7 @@ BuildRequires:  libmfx-devel >= 1.21
 #BuildRequires:  libva-devel
 BuildRequires:  libmpeg2-devel >= 0.5.1
 BuildRequires:  libnotify-devel
-# Should be >= 1.3.2:
+# Should be >= 1.3.4:
 BuildRequires:  libogg-devel >= 1.3.0
 BuildRequires:  librsvg2-devel
 # Should be >= 0.1.9:
@@ -71,11 +76,12 @@ BuildRequires:  libvorbis-devel >= 1.3.3
 %if 0%{?rhel} == 7
 BuildRequires:  libvpx1.7-devel
 %else
-BuildRequires:  libvpx-devel >= 1.6.1
+BuildRequires:  libvpx-devel >= 1.7.1
 %endif
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
+BuildRequires:  meson
 BuildRequires:  nasm
 BuildRequires:  nv-codec-headers >= 8.1.24.2
 BuildRequires:  opencl-headers
@@ -91,7 +97,7 @@ BuildRequires:  tar
 BuildRequires:  wget
 # Should be >= 155:
 BuildRequires:  x264-devel >= 1:0.152
-BuildRequires:  x265-devel >= 1:2.9
+BuildRequires:  x265-devel >= 1:3.2
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
 BuildRequires:  xz-devel
@@ -245,6 +251,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sun Oct 20 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-6.20191018git9901594
+- Udpate to latest snapshot and dependencies.
+
 * Sat Sep 14 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-5.20190914gite2a9571
 - Update to latest snapshot.
 
