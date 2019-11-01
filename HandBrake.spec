@@ -1,5 +1,5 @@
-%global commit0 9901594fa20c59984459b316740ea9b3ca49b824
-%global date 20191018
+%global commit0 ad8cf9f35eabb030c9f764a9c34a354084b749f9
+%global date 20191031
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.2.2
-Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -148,7 +148,7 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265; do
+for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -166,14 +166,15 @@ echo "TAG_HASH=%{commit0}" >> version.txt
 
 # This makes build stop if any download is attempted
 export http_proxy=http://127.0.0.1
+export https_proxy=http://127.0.0.1
 
 # By default the project is built with optimizations for speed and no debug.
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
-# debug options.
+#p debug options.
 %if 0%{?rhel} == 7
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx -std=gnu99" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx -ldav1d -std=gnu99" > custom.defs
 %else
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx -ldav1d" > custom.defs
 %endif
 echo "GCC.args.g.none = " >> custom.defs
 echo "GCC.args.strip = " >> custom.defs
@@ -251,6 +252,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri Nov 01 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-7.20191031gitad8cf9f
+- Update to latest snapshot.
+
 * Sun Oct 20 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-6.20191018git9901594
 - Udpate to latest snapshot and dependencies.
 
