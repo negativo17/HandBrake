@@ -58,8 +58,6 @@ BuildRequires:  libdvdread-devel >= 5.0.3
 BuildRequires:  libfdk-aac-devel >= 2.0.1
 # On Fedora, libgudev provides libgudev1:
 BuildRequires:  libgudev1-devel
-# Should be >= 1.23:
-BuildRequires:  libmfx-devel >= 1.21
 #BuildRequires:  libva-devel
 BuildRequires:  libmpeg2-devel >= 0.5.1
 BuildRequires:  libnotify-devel
@@ -148,7 +146,7 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265; do
+for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray nvenc x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -172,9 +170,9 @@ export https_proxy=http://127.0.0.1
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 #p debug options.
 %if 0%{?rhel} == 7
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx -ldav1d -std=gnu99" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl -std=gnu99" > custom.defs
 %else
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -lmfx -ldav1d" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl" > custom.defs
 %endif
 echo "GCC.args.g.none = " >> custom.defs
 echo "GCC.args.strip = " >> custom.defs
@@ -189,13 +187,11 @@ echo "GCC.args.strip = " >> custom.defs
     --enable-gst \
     --enable-numa \
     --enable-nvenc \
-    --enable-qsv \
     --enable-x265 \
     --prefix=%{_prefix} \
     --verbose
 
-#make_build -C build V=1
-make -C build V=1
+%make_build -C build V=1
 
 %install
 %make_install -C build
@@ -254,6 +250,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Fri Nov 01 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-7.20191031gitad8cf9f
 - Update to latest snapshot.
+- Momentarily disable QSV encoder.
 
 * Sun Oct 20 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-6.20191018git9901594
 - Udpate to latest snapshot and dependencies.
