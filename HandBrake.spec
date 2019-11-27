@@ -1,4 +1,4 @@
-%global commit0 ad8cf9f35eabb030c9f764a9c34a354084b749f9
+%global commit0 a5d359d79f28924fd0a57603793d6aa57499c49a
 %global date 20191031
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.2.2
-Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        8%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -49,7 +49,7 @@ BuildRequires:  libappindicator-gtk3-devel
 # Should be >= 0.14.0:
 BuildRequires:  libass-devel >= 0.13.4
 BuildRequires:  libbluray-devel >= 1.1.2
-# Should be >= 0.5.0:
+# Should be >= 0.5.1:
 BuildRequires:  libdav1d-devel >= 0.3.0
 # Should be >= 6.0.1:
 BuildRequires:  libdvdnav-devel >= 5.0.3
@@ -95,7 +95,7 @@ BuildRequires:  tar
 BuildRequires:  wget
 # Should be >= 155:
 BuildRequires:  x264-devel >= 1:0.152
-BuildRequires:  x265-devel >= 1:3.2
+BuildRequires:  x265-devel >= 1:3.2.1
 BuildRequires:  yasm
 BuildRequires:  zlib-devel
 BuildRequires:  xz-devel
@@ -248,6 +248,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Nov 27 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-8.20191031gita5d359d
+- Update to latest snapshot.
+
 * Fri Nov 01 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-7.20191031gitad8cf9f
 - Update to latest snapshot.
 - Momentarily disable QSV encoder.
