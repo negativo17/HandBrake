@@ -1,0 +1,13 @@
+diff -up HandBrake-1.3.0/libhb/enc_qsv.c.orig HandBrake-1.3.0/libhb/enc_qsv.c
+--- HandBrake-1.3.0/libhb/enc_qsv.c.orig	2019-11-09 21:44:32.000000000 +0100
++++ HandBrake-1.3.0/libhb/enc_qsv.c	2019-11-25 13:13:44.248840649 +0100
+@@ -525,7 +525,9 @@ AVBufferRef *hb_qsv_create_mids(AVBuffer
+     for (i = 0; i < nb_surfaces; i++) {
+         QSVMid *mid = &mids[i];
+         mid->handle        = frames_hwctx->surfaces[i].Data.MemId;
++#if CONFIG_D3D11VA
+         mid->texture       = frames_hwctx->texture;
++#endif
+         mid->hw_frames_ref = hw_frames_ref1;
+     }
+ 

@@ -1,7 +1,7 @@
 %global commit0 a5d359d79f28924fd0a57603793d6aa57499c49a
 %global date 20191031
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
+%global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
@@ -10,8 +10,8 @@
 %endif
 
 Name:           HandBrake
-Version:        1.2.2
-Release:        8%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.3.0
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -23,7 +23,9 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 %endif
 
 # Pass strip tool override to gtk/configure
-Patch2:         %{name}-nostrip.patch
+Patch1:         %{name}-nostrip.patch
+# Fix QSV with unpatched system FFmpeg
+Patch2:         %{name}-qsv.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake3
@@ -42,15 +44,23 @@ BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
 # Should be >= 2.6.2:
 BuildRequires:  harfbuzz-devel >= 1.3.2
+%if 0%{?fedora} >= 31
+BuildRequires:  intel-mediasdk-devel
+%else
+# Should be >= 1.23
+BuildRequires:  libmfx-devel >= 1.21
+%endif
 BuildRequires:  intltool
 BuildRequires:  jansson-devel >= 2.10
 BuildRequires:  lame-devel >= 3.100
 BuildRequires:  libappindicator-gtk3-devel
 # Should be >= 0.14.0:
 BuildRequires:  libass-devel >= 0.13.4
-BuildRequires:  libbluray-devel >= 1.1.2
+# Should be 1.1.2
+BuildRequires:  libbluray-devel >= 1.0.2
 # Should be >= 0.5.1:
 BuildRequires:  libdav1d-devel >= 0.3.0
+BuildRequires:  libdrm-devel
 # Should be >= 6.0.1:
 BuildRequires:  libdvdnav-devel >= 5.0.3
 # Should be >= 6.0.2:
@@ -58,7 +68,7 @@ BuildRequires:  libdvdread-devel >= 5.0.3
 BuildRequires:  libfdk-aac-devel >= 2.0.1
 # On Fedora, libgudev provides libgudev1:
 BuildRequires:  libgudev1-devel
-#BuildRequires:  libva-devel
+BuildRequires:  libva-devel
 BuildRequires:  libmpeg2-devel >= 0.5.1
 BuildRequires:  libnotify-devel
 # Should be >= 1.3.4:
@@ -82,13 +92,12 @@ BuildRequires:  make
 BuildRequires:  meson
 BuildRequires:  nasm
 BuildRequires:  nv-codec-headers >= 8.1.24.2
-BuildRequires:  opencl-headers
 # Should be >= 1.3:
 BuildRequires:  opus-devel >= 1.0.2
 BuildRequires:  patch
 BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
 BuildRequires:  pkgconfig(numa)
-BuildRequires:  python2
+BuildRequires:  python3
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  subversion
 BuildRequires:  tar
@@ -96,7 +105,6 @@ BuildRequires:  wget
 # Should be >= 155:
 BuildRequires:  x264-devel >= 1:0.152
 BuildRequires:  x265-devel >= 1:3.2.1
-BuildRequires:  yasm
 BuildRequires:  zlib-devel
 BuildRequires:  xz-devel
 
@@ -146,7 +154,7 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray nvenc x265; do
+for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -170,9 +178,9 @@ export https_proxy=http://127.0.0.1
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 #p debug options.
 %if 0%{?rhel} == 7
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl -std=gnu99" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl -lmfx -std=gnu99" > custom.defs
 %else
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl -lmfx" > custom.defs
 %endif
 echo "GCC.args.g.none = " >> custom.defs
 echo "GCC.args.strip = " >> custom.defs
@@ -181,6 +189,7 @@ echo "GCC.args.strip = " >> custom.defs
 ./configure \
     --build build \
     --disable-df-fetch \
+    --disable-df-verify \
     --disable-update-checks \
     --enable-asm \
     --enable-fdk-aac \
@@ -248,6 +257,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Dec 09 2019 Simone Caronni <negativo17@gmail.com> - 1.3.0-1
+- Update to 1.3.0.
+
 * Wed Nov 27 2019 Simone Caronni <negativo17@gmail.com> - 1.2.2-8.20191031gita5d359d
 - Update to latest snapshot.
 
