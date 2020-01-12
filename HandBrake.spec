@@ -26,9 +26,11 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 Patch1:         %{name}-nostrip.patch
 # Fix QSV with unpatched system FFmpeg
 Patch2:         %{name}-qsv.patch
+# Lower requirements for CentOS/RHEL 7
+Patch3:         %{name}-lower-req.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
-BuildRequires:  cmake3
+BuildRequires:  cmake
 # Should be >= 1.0.8:
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
