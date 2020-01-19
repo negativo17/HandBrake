@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.3.1
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -259,6 +259,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sun Jan 19 2020 Simone Caronni <negativo17@gmail.com> - 1.3.1-2
+- Rebuild for updated dependencies.
+
 * Sun Jan 12 2020 Simone Caronni <negativo17@gmail.com> - 1.3.1-1
 - Update to 1.3.1.
 
