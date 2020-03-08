@@ -86,7 +86,7 @@ BuildRequires:  libvorbis-devel >= 1.3.3
 %if 0%{?rhel} == 7
 BuildRequires:  libvpx1.7-devel
 %else
-BuildRequires:  libvpx-devel >= 1.7.1
+BuildRequires:  libvpx-devel >= 1.7.0
 %endif
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
