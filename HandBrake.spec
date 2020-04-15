@@ -1,7 +1,7 @@
-%global commit0 a5d359d79f28924fd0a57603793d6aa57499c49a
-%global date 20191031
+%global commit0 bbcd3a5ea70054cef0950c2e0211ab700efce178
+%global date 20200331
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global tag %{version}
+#global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
@@ -11,7 +11,7 @@
 
 Name:           HandBrake
 Version:        1.3.1
-Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -26,8 +26,6 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 Patch1:         %{name}-nostrip.patch
 # Fix QSV with unpatched system FFmpeg
 Patch2:         %{name}-qsv.patch
-# Lower requirements for CentOS/RHEL 7
-Patch3:         %{name}-lower-req.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
@@ -198,6 +196,7 @@ echo "GCC.args.strip = " >> custom.defs
     --enable-gst \
     --enable-numa \
     --enable-nvenc \
+    --enable-qsv \
     --enable-x265 \
     --prefix=%{_prefix} \
     --verbose
@@ -259,6 +258,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Apr 15 2020 Simone Caronni <negativo17@gmail.com> - 1.3.1-4.20200331gitbbcd3a5
+- Update to latest 1.3.x branch snapshot.
+- Enable Intel QuickSync support.
+
 * Wed Mar 18 2020 Simone Caronni <negativo17@gmail.com> - 1.3.1-3
 - Rebuild for updated dependencies.
 
