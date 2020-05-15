@@ -1,7 +1,7 @@
-%global commit0 bbcd3a5ea70054cef0950c2e0211ab700efce178
-%global date 20200331
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
+#global commit0 bbcd3a5ea70054cef0950c2e0211ab700efce178
+#global date 20200331
+#global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
@@ -10,8 +10,8 @@
 %endif
 
 Name:           HandBrake
-Version:        1.3.1
-Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.3.2
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -258,6 +258,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri May 15 2020 Simone Caronni <negativo17@gmail.com> - 1.3.2-1
+- Update to 1.3.2 release.
+
 * Wed Apr 15 2020 Simone Caronni <negativo17@gmail.com> - 1.3.1-4.20200331gitbbcd3a5
 - Update to latest 1.3.x branch snapshot.
 - Enable Intel QuickSync support.
