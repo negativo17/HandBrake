@@ -1,0 +1,87 @@
+diff -Naur HandBrake-1.3.3.old/pkg/linux/module.rules HandBrake-1.3.3/pkg/linux/module.rules
+--- HandBrake-1.3.3.old/pkg/linux/module.rules	2020-06-28 19:53:24.079133821 +0200
++++ HandBrake-1.3.3/pkg/linux/module.rules	2020-07-01 07:37:04.888376936 +0200
+@@ -96,83 +96,3 @@
+ #	flatpak-builder --run $(PKG.mediasdk.build.flatpak) $(PKG.mediasdk.manifest.flatpak) bash
+ 	flatpak build-bundle --runtime $(PKG.repo.flatpak) $(PKG.mediasdk.flatpak) $(PKG.mediasdk.name.flatpak) $(PKG.plugin.version.flatpak)
+ 	-flatpak --user remove --noninteractive $(PKG.gui.name.flatpak)//$(PKG.branch.flatpak)
+-
+-#
+-# Debian binary package rules
+-#
+-$(PKG.gui.tmp.deb): | $(dir $(PKG.gui.tmp.deb))
+-$(PKG.gui.tmp.deb): GNUmakefile
+-	-$(RM.exe) $(SRC/)debian
+-	ln -s $(PKG.debian) $(SRC/)debian
+-	fakeroot $(MAKE) -C $(SRC/) -f debian/rules clean
+-	$(MAKE) BUILDDIR=$(abspath $(BUILD)) CONFIGURE=configure -C $(SRC/) -f debian/rules build
+-	echo $(PKG.out.abs/)
+-	fakeroot $(MAKE) FORCEVERSION="-- -v$(HB.debversion)" BUILDDIR=$(abspath $(BUILD)) CONFIGURE=configure PKGDESTDIR=$(PKG.out.abs/ -C $(SRC/) -f debian/rules binary
+-
+-
+-$(PKG.gui.deb): | $(dir $(PKG.gui.deb))
+-$(PKG.gui.deb): $(PKG.gui.tmp.deb)
+-	$(MV.exe) $(PKG.gui.tmp.deb) $(PKG.gui.deb)
+-
+-$(PKG.cli.deb): | $(dir $(PKG.cli.deb))
+-$(PKG.cli.deb): $(PKG.gui.tmp.deb)
+-	$(MV.exe) $(PKG.cli.tmp.deb) $(PKG.cli.deb)
+-
+-#
+-# Debian source package rules
+-#
+-pkg.push.src.deb:: $(PKG.src.deb.stamp)
+-	(cd $(STAGE.out.src/)disco && dput handbrake-git-snapshots $(HB.name.lower)_$(HB.debversion)-zhb-1ppa1~disco1_source.changes )
+-	(cd $(STAGE.out.src/)eoan && dput handbrake-git-snapshots $(HB.name.lower)_$(HB.debversion)-zhb-1ppa1~eoan1_source.changes )
+-	(cd $(STAGE.out.src/)focal && dput handbrake-git-snapshots $(HB.name.lower)_$(HB.debversion)-zhb-1ppa1~focal1_source.changes )
+-
+-
+-$(PKG.src.deb.stamp): GNUmakefile
+-	-$(RM.exe) -rf $(STAGE.out.src/)
+-	make contrib.fetch
+-	$(MKDIR.exe) -p $(STAGE.out.src/)disco
+-	$(GIT.exe) -C $(SRC/) archive --format=tar --prefix=$(PKG.deb.basename)/ $(HB.repo.shorthash) | $(TAR.exe) -xC $(STAGE.out.src/)disco/
+-	$(SRC/)scripts/repo-info.sh $(SRC/) > $(STAGE.out.src/)disco/$(PKG.deb.basename)/version.txt
+-	$(CP.exe) -a $(SRC/)download $(STAGE.out.src/)disco/$(PKG.deb.basename)
+-	cp -a $(PKG.debian) $(STAGE.out.src/)disco/$(PKG.deb.basename)
+-	$(CP.exe) $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/control.disco $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/control
+-	$(CP.exe) $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/rules.disco $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/rules
+-	echo "$(HB.name.lower) (1:$(HB.debversion)-zhb-1ppa1~disco1) disco; urgency=low" > $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/changelog
+-	echo "" >> $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/changelog
+-	echo "  * Snapshot: See commit history at" >> $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/changelog
+-	echo "    https://github.com/HandBrake/HandBrake" >> $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/changelog
+-	echo "" >> $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/changelog
+-	echo " -- John Stebbins <jstebbins.hb@gmail.com>  $(DEBIAN_CHANGELOG_DATE)" >> $(STAGE.out.src/)disco/$(PKG.deb.basename)/debian/changelog
+-	$(TAR.exe) czf $(STAGE.out.src/)disco/$(PKG.src.deb.tar) -C $(STAGE.out.src/)disco $(PKG.deb.basename)
+-	(cd $(STAGE.out.src/)disco/$(PKG.deb.basename) && debuild -S -kjstebbins.hb)
+-	$(MKDIR.exe) -p $(STAGE.out.src/)eoan
+-	$(GIT.exe) -C $(SRC/) archive --format=tar --prefix=$(PKG.deb.basename)/ $(HB.repo.shorthash) | $(TAR.exe) -xC $(STAGE.out.src/)eoan/
+-	$(SRC/)scripts/repo-info.sh $(SRC/) > $(STAGE.out.src/)eoan/$(PKG.deb.basename)/version.txt
+-	$(CP.exe) -a $(SRC/)download $(STAGE.out.src/)eoan/$(PKG.deb.basename)
+-	cp -a $(PKG.debian) $(STAGE.out.src/)eoan/$(PKG.deb.basename)
+-	$(CP.exe) $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/control.eoan $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/control
+-	$(CP.exe) $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/rules.eoan $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/rules
+-	echo "$(HB.name.lower) (1:$(HB.debversion)-zhb-1ppa1~eoan1) eoan; urgency=low" > $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/changelog
+-	echo "" >> $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/changelog
+-	echo "  * Snapshot: See commit history at" >> $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/changelog
+-	echo "    https://github.com/HandBrake/HandBrake" >> $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/changelog
+-	echo "" >> $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/changelog
+-	echo " -- John Stebbins <jstebbins.hb@gmail.com>  $(DEBIAN_CHANGELOG_DATE)" >> $(STAGE.out.src/)eoan/$(PKG.deb.basename)/debian/changelog
+-	$(TAR.exe) czf $(STAGE.out.src/)eoan/$(PKG.src.deb.tar) -C $(STAGE.out.src/)eoan $(PKG.deb.basename)
+-	(cd $(STAGE.out.src/)eoan/$(PKG.deb.basename) && debuild -S -kjstebbins.hb)
+-	$(MKDIR.exe) -p $(STAGE.out.src/)focal
+-	$(GIT.exe) -C $(SRC/) archive --format=tar --prefix=$(PKG.deb.basename)/ $(HB.repo.shorthash) | $(TAR.exe) -xC $(STAGE.out.src/)focal/
+-	$(SRC/)scripts/repo-info.sh $(SRC/) > $(STAGE.out.src/)focal/$(PKG.deb.basename)/version.txt
+-	$(CP.exe) -a $(SRC/)download $(STAGE.out.src/)focal/$(PKG.deb.basename)
+-	cp -a $(PKG.debian) $(STAGE.out.src/)focal/$(PKG.deb.basename)
+-	$(CP.exe) $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/control.focal $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/control
+-	$(CP.exe) $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/rules.focal $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/rules
+-	echo "$(HB.name.lower) (1:$(HB.debversion)-zhb-1ppa1~focal1) focal; urgency=low" > $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/changelog
+-	echo "" >> $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/changelog
+-	echo "  * Snapshot: See commit history at" >> $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/changelog
+-	echo "    https://github.com/HandBrake/HandBrake" >> $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/changelog
+-	echo "" >> $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/changelog
+-	echo " -- John Stebbins <jstebbins.hb@gmail.com>  $(DEBIAN_CHANGELOG_DATE)" >> $(STAGE.out.src/)focal/$(PKG.deb.basename)/debian/changelog
+-	$(TAR.exe) czf $(STAGE.out.src/)focal/$(PKG.src.deb.tar) -C $(STAGE.out.src/)focal $(PKG.deb.basename)
+-	(cd $(STAGE.out.src/)focal/$(PKG.deb.basename) && debuild -S -kjstebbins.hb)
+-	$(TOUCH.exe) $(PKG.src.deb.stamp)
