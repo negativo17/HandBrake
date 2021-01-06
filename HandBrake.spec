@@ -1,13 +1,13 @@
-#global commit0 bbcd3a5ea70054cef0950c2e0211ab700efce178
-#global date 20200331
-#global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global tag %{version}
+%global commit0 2e305eda8ba831384958957fa13e3fd3f59320ee
+%global date 20210105
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+#global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.3.3
-Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.4.0
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -20,26 +20,18 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 
 # Pass strip tool override to gtk/configure
 Patch1:         %{name}-nostrip.patch
-# Fix QSV with unpatched system FFmpeg
-Patch2:         %{name}-qsv.patch
-Patch3:         %{name}-makefile.patch
 
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
-# Should be >= 1.0.8:
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
-# Should be >= 2.12.1:
 BuildRequires:  fontconfig-devel >= 2.10.95
 BuildRequires:  ffmpeg-devel >= 4.2.1
-# Should be >= 2.10.1:
 BuildRequires:  freetype-devel >= 2.4.11
-# Should be >= 1.0.7:
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
-# Should be >= 2.6.2:
 BuildRequires:  harfbuzz-devel >= 1.3.2
 BuildRequires:  intel-mediasdk-devel
 BuildRequires:  intltool
@@ -49,16 +41,11 @@ BuildRequires:  libappindicator-gtk3-devel
 %if 0%{?fedora}
 BuildRequires:  libappstream-glib
 %endif
-# Should be >= 0.14.0:
 BuildRequires:  libass-devel >= 0.13.4
-# Should be 1.1.2
 BuildRequires:  libbluray-devel >= 1.0.2
-# Should be >= 0.5.1:
 BuildRequires:  libdav1d-devel >= 0.3.0
 BuildRequires:  libdrm-devel
-# Should be >= 6.0.1:
 BuildRequires:  libdvdnav-devel >= 5.0.3
-# Should be >= 6.0.2:
 BuildRequires:  libdvdread-devel >= 5.0.3
 BuildRequires:  libfdk-aac-devel >= 2.0.1
 # On Fedora, libgudev provides libgudev1:
@@ -66,15 +53,12 @@ BuildRequires:  libgudev1-devel
 BuildRequires:  libva-devel
 BuildRequires:  libmpeg2-devel >= 0.5.1
 BuildRequires:  libnotify-devel
-# Should be >= 1.3.4:
 BuildRequires:  libogg-devel >= 1.3.0
 BuildRequires:  librsvg2-devel
-# Should be >= 0.1.9:
 BuildRequires:  libsamplerate-devel >= 0.1.8
 BuildRequires:  libtheora-devel >= 1.1.1
 BuildRequires:  libtool
 BuildRequires:  libva-devel
-# Should be >= 1.3.5:
 BuildRequires:  libvorbis-devel >= 1.3.3
 %if 0%{?rhel} == 7
 BuildRequires:  libvpx1.7-devel
@@ -96,6 +80,7 @@ BuildRequires:  python3
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  subversion
 BuildRequires:  tar
+BuildRequires:  turbojpeg-devel
 BuildRequires:  wget
 # Should be >= 155:
 BuildRequires:  x264-devel >= 1:0.152
@@ -259,6 +244,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Jan  6 2021 Simone Caronni <negativo17@gmail.com> - 1.4.0-1.20210105git2e305ed
+- Update to latest 1.4.0 snapshot.
+
 * Sun Dec 06 2020 Simone Caronni <negativo17@gmail.com> - 1.3.3-4
 - Rebuild for updated depdendencies.
 
