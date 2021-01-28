@@ -1,5 +1,5 @@
-%global commit0 2e305eda8ba831384958957fa13e3fd3f59320ee
-%global date 20210105
+%global commit0 818dbfe932eb2c6c484bd09fee04c5748963a1be
+%global date 20210125
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.4.0
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -87,6 +87,7 @@ BuildRequires:  x264-devel >= 1:0.152
 BuildRequires:  x265-devel >= 1:3.2.1
 BuildRequires:  zlib-devel
 BuildRequires:  xz-devel
+BuildRequires:  zimg-devel >= 3.0.1
 
 Requires:       hicolor-icon-theme
 
@@ -134,7 +135,7 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265; do
+for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265 zimg; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -244,6 +245,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Jan 28 2021 Simone Caronni <negativo17@gmail.com> - 1.4.0-2.20210125git818dbfe
+- Update to latest snapshot.
+
 * Wed Jan  6 2021 Simone Caronni <negativo17@gmail.com> - 1.4.0-1.20210105git2e305ed
 - Update to latest 1.4.0 snapshot.
 
