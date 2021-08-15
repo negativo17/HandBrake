@@ -1,13 +1,13 @@
-%global commit0 cbe7e44286032af07bcaa2d8a12152d87109a5a5
-%global date 20210718
+%global commit0 00d42bf15254a079e2e733e960b2305d495f7b04
+%global date 20210814
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global tag %{version}
+#global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.4.0
-Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.4.1
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -245,6 +245,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sun Aug 15 2021 Simone Caronni <negativo17@gmail.com> - 1.4.1-1.20210814git00d42bf
+- Update to latest 1.4.x snapshot.
+
 * Mon Jul 26 2021 Simone Caronni <negativo17@gmail.com> - 1.4.0-7
 - Rebuild for updated dependencies.
 
