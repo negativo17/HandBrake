@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.4.1
-Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -21,7 +21,6 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # Pass strip tool override to gtk/configure
 Patch1:         %{name}-nostrip.patch
 
-BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  cmake
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
@@ -33,12 +32,15 @@ BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  harfbuzz-devel >= 1.3.2
+%ifarch x86_64
 BuildRequires:  intel-mediasdk-devel
+%endif
 BuildRequires:  intltool
 BuildRequires:  jansson-devel >= 2.10
 BuildRequires:  lame-devel >= 3.100
+BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  libappindicator-gtk3-devel
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 9
 BuildRequires:  libappstream-glib
 %endif
 BuildRequires:  libass-devel >= 0.13.4
@@ -142,8 +144,8 @@ done
 # Fix desktop file
 sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
 
-%if 0%{?rhel}
-# Do not build metainfo data (gettext too old):
+%if 0%{?rhel} < 9
+# Do not build metainfo data (gettext too old), on el8 requires appstream from el8.next:
 sed -i -e '/^metainfo_DATA/g' -e '/^dist_metainfo_DATA/g' gtk/src/Makefile.am
 %endif
 
@@ -162,12 +164,17 @@ export https_proxy=http://127.0.0.1
 
 # By default the project is built with optimizations for speed and no debug.
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
-#p debug options.
+# debug options.
+
 %if 0%{?rhel} == 7
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl -lmfx -std=gnu99" > custom.defs
-%else
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl -lmfx" > custom.defs
+%define gcc_args_el7 -std=gnu99
 %endif
+
+%ifarch x86_64
+%define gcc_args_x64 -lmfx
+%endif
+
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl %{?gcc_args_x64:%gcc_args_x64} %{?gcc_args_el7:%gcc_args_el7}" > custom.defs
 echo "GCC.args.g.none = " >> custom.defs
 echo "GCC.args.strip = " >> custom.defs
 
@@ -182,7 +189,9 @@ echo "GCC.args.strip = " >> custom.defs
     --enable-gst \
     --enable-numa \
     --enable-nvenc \
+%ifarch x86_64
     --enable-qsv \
+%endif
     --enable-x265 \
     --prefix=%{_prefix}
 
@@ -200,8 +209,7 @@ install -D -p -m 644 gtk/src/%{desktop_id}.desktop \
 install -D -p -m 644 gtk/src/%{desktop_id}.svg \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
-
-%if 0%{?rhel}
+%if 0%{?rhel} < 9
 rm -fr %{buildroot}%{_datadir}/metainfo
 %endif
 
@@ -209,7 +217,7 @@ rm -fr %{buildroot}%{_datadir}/metainfo
 
 %check
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 9
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.metainfo.xml
 %endif
 
@@ -233,7 +241,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %license COPYING
 %doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/ghb
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 9
 %{_metainfodir}/%{desktop_id}.metainfo.xml
 %endif
 %{_datadir}/applications/%{desktop_id}.desktop
@@ -245,6 +253,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Sep 29 2021 Simone Caronni <negativo17@gmail.com> - 1.4.1-3
+- Fix build on aarch64.
+- Update SPEC file.
+
 * Fri Sep 24 2021 Simone Caronni <negativo17@gmail.com> - 1.4.1-2
 - Update to final 1.4.1.
 
