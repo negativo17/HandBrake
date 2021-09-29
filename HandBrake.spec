@@ -144,7 +144,7 @@ done
 # Fix desktop file
 sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
 
-%if 0%{?rhel} < 9
+%if 0%{?rhel} == 8 || 0%{?rhel} == 7
 # Do not build metainfo data (gettext too old), on el8 requires appstream from el8.next:
 sed -i -e '/^metainfo_DATA/g' -e '/^dist_metainfo_DATA/g' gtk/src/Makefile.am
 %endif
@@ -209,7 +209,7 @@ install -D -p -m 644 gtk/src/%{desktop_id}.desktop \
 install -D -p -m 644 gtk/src/%{desktop_id}.svg \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
-%if 0%{?rhel} < 9
+%if 0%{?rhel} == 8 || 0%{?rhel} == 7
 rm -fr %{buildroot}%{_datadir}/metainfo
 %endif
 
