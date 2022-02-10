@@ -6,7 +6,7 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.4.2
+Version:        1.5.1
 Release:        1%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
@@ -21,28 +21,24 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # Pass strip tool override to gtk/configure
 Patch1:         %{name}-nostrip.patch
 
+BuildRequires:  appstream
 BuildRequires:  cmake
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
-BuildRequires:  fontconfig-devel >= 2.10.95
-BuildRequires:  ffmpeg-devel >= 4.2.1
+BuildRequires:  fontconfig-devel
+BuildRequires:  ffmpeg-devel >= 4.4.1
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  harfbuzz-devel >= 1.3.2
-%ifarch x86_64
-BuildRequires:  intel-mediasdk-devel
-%endif
 BuildRequires:  intltool
 BuildRequires:  jansson-devel >= 2.10
 BuildRequires:  lame-devel >= 3.100
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  libappindicator-gtk3-devel
-%if 0%{?fedora} || 0%{?rhel} >= 9
 BuildRequires:  libappstream-glib
-%endif
 BuildRequires:  libass-devel >= 0.13.4
 BuildRequires:  libbluray-devel >= 1.0.2
 BuildRequires:  libdav1d-devel >= 0.3.0
@@ -50,7 +46,6 @@ BuildRequires:  libdrm-devel
 BuildRequires:  libdvdnav-devel >= 5.0.3
 BuildRequires:  libdvdread-devel >= 5.0.3
 BuildRequires:  libfdk-aac-devel >= 2.0.1
-# On Fedora, libgudev provides libgudev1:
 BuildRequires:  libgudev1-devel
 BuildRequires:  libva-devel
 BuildRequires:  libmpeg2-devel >= 0.5.1
@@ -62,19 +57,14 @@ BuildRequires:  libtheora-devel >= 1.1.1
 BuildRequires:  libtool
 BuildRequires:  libva-devel
 BuildRequires:  libvorbis-devel >= 1.3.3
-%if 0%{?rhel} == 7
-BuildRequires:  libvpx1.7-devel
-%else
 BuildRequires:  libvpx-devel >= 1.7.0
-%endif
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
 BuildRequires:  meson
 BuildRequires:  nasm
-BuildRequires:  nv-codec-headers >= 8.1.24.2
-# Should be >= 1.3:
-BuildRequires:  opus-devel >= 1.0.2
+BuildRequires:  nv-codec-headers >= 11
+BuildRequires:  opus-devel >= 1.3
 BuildRequires:  patch
 BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
 BuildRequires:  pkgconfig(numa)
@@ -84,12 +74,16 @@ BuildRequires:  subversion
 BuildRequires:  tar
 BuildRequires:  turbojpeg-devel
 BuildRequires:  wget
-# Should be >= 155:
-BuildRequires:  x264-devel >= 1:0.152
+BuildRequires:  x264-devel >= 1:0.155
 BuildRequires:  x265-devel >= 1:3.2.1
 BuildRequires:  zlib-devel
 BuildRequires:  xz-devel
 BuildRequires:  zimg-devel >= 3.0.1
+
+%ifarch x86_64
+BuildRequires:  intel-mediasdk-devel
+BuildRequires:  oneVPL-devel
+%endif
 
 Requires:       hicolor-icon-theme
 
@@ -137,17 +131,12 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx nvenc x265 zimg; do
+for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpl nvenc x265 zimg; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
 # Fix desktop file
 sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
-
-%if 0%{?rhel} == 8 || 0%{?rhel} == 7
-# Do not build metainfo data (gettext too old), on el8 requires appstream from el8.next:
-sed -i -e '/^metainfo_DATA/g' -e '/^dist_metainfo_DATA/g' gtk/src/Makefile.am
-%endif
 
 %build
 echo "HASH=%{commit0}" > version.txt
@@ -166,19 +155,15 @@ export https_proxy=http://127.0.0.1
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 # debug options.
 
-%if 0%{?rhel} == 7
-%define gcc_args_el7 -std=gnu99
-%endif
-
 %ifarch x86_64
-%define gcc_args_x64 -lmfx
+%define gcc_args_x64 -lvpl
 %endif
 
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl %{?gcc_args_x64:%gcc_args_x64} %{?gcc_args_el7:%gcc_args_el7}" > custom.defs
+echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl %{?gcc_args_x64:%gcc_args_x64}" > custom.defs
 echo "GCC.args.g.none = " >> custom.defs
 echo "GCC.args.strip = " >> custom.defs
 
-# Not an autotools configure script.
+# Not an autotools configure script:
 ./configure \
     --build build \
     --disable-df-fetch \
@@ -209,41 +194,17 @@ install -D -p -m 644 gtk/src/%{desktop_id}.desktop \
 install -D -p -m 644 gtk/src/%{desktop_id}.svg \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
-%if 0%{?rhel} == 8 || 0%{?rhel} == 7
-rm -fr %{buildroot}%{_datadir}/metainfo
-%endif
-
 %find_lang ghb
 
 %check
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
-%if 0%{?fedora} || 0%{?rhel} >= 9
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.metainfo.xml
-%endif
-
-%if 0%{?rhel} == 7
-%post gui
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-/usr/bin/update-desktop-database &> /dev/null || :
-
-%postun gui
-if [ $1 -eq 0 ] ; then
-    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-/usr/bin/update-desktop-database &> /dev/null || :
-
-%posttrans gui
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-%endif
 
 %files -f ghb.lang gui
 %license COPYING
 %doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/ghb
-%if 0%{?fedora} || 0%{?rhel} >= 9
 %{_metainfodir}/%{desktop_id}.metainfo.xml
-%endif
 %{_datadir}/applications/%{desktop_id}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
@@ -253,6 +214,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sat Feb 05 2022 Simone Caronni <negativo17@gmail.com> - 1.5.1-1
+- Update to 1.5.1.
+- Enable One Video Processing Library.
+- Drop RHEL/CentOS 7 support.
+- Enable AppData for RHEL/CentOS 8.
+
 * Sun Nov 07 2021 Simone Caronni <negativo17@gmail.com> - 1.4.2-1
 - Update to 1.4.2.
 
