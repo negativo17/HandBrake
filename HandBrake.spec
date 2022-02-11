@@ -24,17 +24,16 @@ Patch0:         %{name}-nostrip.patch
 Patch1:         %{name}-deps.patch
 
 BuildRequires:  AMF-devel
-BuildRequires:  appstream
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
+BuildRequires:  devtoolset-9-gcc-c++
 BuildRequires:  fontconfig-devel
 BuildRequires:  libavcodec-devel >= 4.4.1
 BuildRequires:  libavfilter-devel >= 4.4.1
 BuildRequires:  libavformat-devel >= 4.4.1
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
-BuildRequires:  gcc-c++
 BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  harfbuzz-devel >= 1.3.2
 BuildRequires:  intltool
@@ -42,7 +41,6 @@ BuildRequires:  jansson-devel >= 2.10
 BuildRequires:  lame-devel >= 3.100
 BuildRequires:  liba52-devel >= 0.7.4
 BuildRequires:  libappindicator-gtk3-devel
-BuildRequires:  libappstream-glib
 BuildRequires:  libass-devel >= 0.13.4
 BuildRequires:  libbluray-devel >= 1.0.2
 BuildRequires:  libdav1d-devel >= 0.3.0
@@ -61,12 +59,12 @@ BuildRequires:  libtheora-devel >= 1.1.1
 BuildRequires:  libtool
 BuildRequires:  libva-devel
 BuildRequires:  libvorbis-devel >= 1.3.3
-BuildRequires:  libvpx-devel >= 1.7.0
+BuildRequires:  libvpx1.7-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
 BuildRequires:  nv-codec-headers >= 11
-BuildRequires:  opus-devel >= 1.3
+BuildRequires:  opus-devel >= 1.0.2
 BuildRequires:  patch
 BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
 BuildRequires:  pkgconfig(numa)
@@ -140,6 +138,9 @@ done
 # Fix desktop file
 sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
 
+# Do not build metainfo data (gettext too old), on el8 requires appstream from el8.next:
+sed -i -e '/^metainfo_DATA/g' -e '/^dist_metainfo_DATA/g' gtk/src/Makefile.am
+
 %build
 echo "HASH=%{commit0}" > version.txt
 echo "SHORTHASH=%{shortcommit0}" >> version.txt
@@ -167,6 +168,8 @@ GCC.args.O.speed =
 GCC.args.g.none =
 GCC.args.strip =
 EOF
+
+. /opt/rh/devtoolset-9/enable
 
 # Not an autotools configure script:
 ./configure \
@@ -200,17 +203,31 @@ install -D -p -m 644 gtk/src/%{desktop_id}.desktop \
 install -D -p -m 644 gtk/src/%{desktop_id}.svg \
     %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
+rm -fr %{buildroot}%{_datadir}/metainfo
+
 %find_lang ghb
 
 %check
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.metainfo.xml
+
+%post gui
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+/usr/bin/update-desktop-database &> /dev/null || :
+
+%postun gui
+if [ $1 -eq 0 ] ; then
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+/usr/bin/update-desktop-database &> /dev/null || :
+
+%posttrans gui
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files -f ghb.lang gui
 %license COPYING
 %doc AUTHORS.markdown NEWS.markdown README.markdown THANKS.markdown
 %{_bindir}/ghb
-%{_metainfodir}/%{desktop_id}.metainfo.xml
 %{_datadir}/applications/%{desktop_id}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
