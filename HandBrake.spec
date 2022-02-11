@@ -1,4 +1,4 @@
-%global commit0 00d42bf15254a079e2e733e960b2305d495f7b04
+%global commit0 09690d61027d52e37a86f24ecff4bca7ee3a03b6
 %global date 20210814
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global tag %{version}
@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -21,6 +21,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 # Pass strip tool override to gtk/configure
 Patch1:         %{name}-nostrip.patch
 
+BuildRequires:  AMF-devel
 BuildRequires:  appstream
 BuildRequires:  cmake
 BuildRequires:  bzip2-devel
@@ -177,6 +178,7 @@ echo "GCC.args.strip = " >> custom.defs
 %ifarch x86_64
     --enable-qsv \
 %endif
+    --enable-vce \
     --enable-x265 \
     --prefix=%{_prefix}
 
@@ -214,6 +216,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri Feb 11 2022 Simone Caronni <negativo17@gmail.com> - 1.5.1-2
+- Enable Advanced Media Framework support.
+
 * Sat Feb 05 2022 Simone Caronni <negativo17@gmail.com> - 1.5.1-1
 - Update to 1.5.1.
 - Enable One Video Processing Library.
