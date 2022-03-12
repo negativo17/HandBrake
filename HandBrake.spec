@@ -73,7 +73,7 @@ BuildRequires:  python3
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  subversion
 BuildRequires:  tar
-BuildRequires:  turbojpeg-devel
+BuildRequires:  turbojpeg-devel >= 1.5.3
 BuildRequires:  wget
 BuildRequires:  x264-devel >= 1:0.155
 BuildRequires:  x265-devel >= 1:3.2.1
