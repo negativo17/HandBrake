@@ -1,13 +1,13 @@
-%global commit0 09690d61027d52e37a86f24ecff4bca7ee3a03b6
-%global date 20210814
+%global commit0 d719d8a12145ea90cff61eb4f469b79cfe01d438
+%global date 20220407
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global tag %{version}
+#global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.5.1
-Release:        2%{?dist}
+Version:        1.6.0
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -19,16 +19,19 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 %endif
 
 # Pass strip tool override to gtk/configure
-Patch1:         %{name}-nostrip.patch
+Patch0:         %{name}-nostrip.patch
+# Adjust dependencies when using system libraries
+Patch1:         %{name}-deps.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
-BuildRequires:  cmake
 BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  fontconfig-devel
-BuildRequires:  ffmpeg-devel >= 4.4.1
+BuildRequires:  libavcodec-devel >= 4.4.1
+BuildRequires:  libavfilter-devel >= 4.4.1
+BuildRequires:  libavformat-devel >= 4.4.1
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
@@ -62,8 +65,6 @@ BuildRequires:  libvpx-devel >= 1.7.0
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
-BuildRequires:  meson
-BuildRequires:  nasm
 BuildRequires:  nv-codec-headers >= 11
 BuildRequires:  opus-devel >= 1.3
 BuildRequires:  patch
@@ -160,9 +161,12 @@ export https_proxy=http://127.0.0.1
 %define gcc_args_x64 -lvpl
 %endif
 
-echo "GCC.args.O.speed = %{optflags} -I%{_includedir}/ffmpeg -lx265 -lfdk-aac -ldav1d -ldl %{?gcc_args_x64:%gcc_args_x64}" > custom.defs
-echo "GCC.args.g.none = " >> custom.defs
-echo "GCC.args.strip = " >> custom.defs
+# Do not pass -O3, -g0 and disable stripping:
+cat > custom.defs << EOF
+GCC.args.O.speed =
+GCC.args.g.none =
+GCC.args.strip =
+EOF
 
 # Not an autotools configure script:
 ./configure \
@@ -216,6 +220,11 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Apr 07 2022 Simone Caronni <negativo17@gmail.com> - 1.6.0-1.20220407gitd719d8a
+- Update to latest 1.6.0 snapshot.
+- Adjust dependencies when using system libraries.
+- Adjust compile options for changed defaults.
+
 * Fri Feb 11 2022 Simone Caronni <negativo17@gmail.com> - 1.5.1-2
 - Enable Advanced Media Framework support.
 
