@@ -162,7 +162,7 @@ export https_proxy=http://127.0.0.1
 %define gcc_args_x64 -lvpl
 %endif
 
-# Do not pass -O3, -g0 and disable stripping:
+# These plus "--no-harden" at configure time set proper compiler flags:
 cat > custom.defs << EOF
 GCC.args.c_std =
 GCC.args.cxx_std =
