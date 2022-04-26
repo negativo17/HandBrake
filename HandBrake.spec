@@ -1,5 +1,5 @@
-%global commit0 d719d8a12145ea90cff61eb4f469b79cfe01d438
-%global date 20220407
+%global commit0 f5f6fcd24ab31d67d05a8309f766c55a6a83f1f2
+%global date 20220425
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.6.0
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -163,7 +163,9 @@ export https_proxy=http://127.0.0.1
 
 # Do not pass -O3, -g0 and disable stripping:
 cat > custom.defs << EOF
-GCC.args.O.speed =
+GCC.args.c_std =
+GCC.args.cxx_std =
+GCC.args.O.speed = %build_cflags
 GCC.args.g.none =
 GCC.args.strip =
 EOF
@@ -184,6 +186,7 @@ EOF
 %endif
     --enable-vce \
     --enable-x265 \
+    --no-harden \
     --prefix=%{_prefix}
 
 %make_build -C build
@@ -220,6 +223,10 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Apr 26 2022 Simone Caronni <negativo17@gmail.com> - 1.6.0-2.20220425gitf5f6fcd
+- Update to latest 1.6.0 snapshot.
+- Set proper compile options.
+
 * Thu Apr 07 2022 Simone Caronni <negativo17@gmail.com> - 1.6.0-1.20220407gitd719d8a
 - Update to latest 1.6.0 snapshot.
 - Adjust dependencies when using system libraries.
