@@ -1,5 +1,5 @@
-%global commit0 f5f6fcd24ab31d67d05a8309f766c55a6a83f1f2
-%global date 20220425
+%global commit0 f8e5306084f7e99f2627fffd0e414d608370192f
+%global date 20220702
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.6.0
-Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -29,9 +29,9 @@ BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  fontconfig-devel
-BuildRequires:  libavcodec-devel >= 4.4.1
-BuildRequires:  libavfilter-devel >= 4.4.1
-BuildRequires:  libavformat-devel >= 4.4.1
+BuildRequires:  libavcodec-devel >= 5.0.1
+BuildRequires:  libavfilter-devel >= 5.0.1
+BuildRequires:  libavformat-devel >= 5.0.1
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
@@ -72,7 +72,6 @@ BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
 BuildRequires:  pkgconfig(numa)
 BuildRequires:  python3
 BuildRequires:  speex-devel >= 1.2
-BuildRequires:  subversion
 BuildRequires:  tar
 BuildRequires:  turbojpeg-devel >= 1.5.3
 BuildRequires:  wget
@@ -85,6 +84,7 @@ BuildRequires:  zimg-devel >= 3.0.1
 %ifarch x86_64
 BuildRequires:  intel-mediasdk-devel
 BuildRequires:  oneVPL-devel
+BuildRequires:  svt-av1-devel
 %endif
 
 Requires:       hicolor-icon-theme
@@ -133,7 +133,7 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpl nvenc x265 zimg; do
+for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpl nvenc svt-av1 x265 zimg; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -223,6 +223,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Jul 05 2022 Simone Caronni <negativo17@gmail.com> - 1.6.0-3.20220702gitf8e5306
+- Update to latest snapshot.
+
 * Tue Apr 26 2022 Simone Caronni <negativo17@gmail.com> - 1.6.0-2.20220425gitf5f6fcd
 - Update to latest 1.6.0 snapshot.
 - Set proper compile options.
