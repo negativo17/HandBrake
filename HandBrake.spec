@@ -22,6 +22,8 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 Patch0:         %{name}-nostrip.patch
 # Adjust dependencies when using system libraries
 Patch1:         %{name}-deps.patch
+# Do not try to link svt-av1 on aarch64
+Patch2:         %{name}-aarch64-build.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
@@ -158,7 +160,7 @@ export https_proxy=http://127.0.0.1
 # debug options.
 
 %ifarch x86_64
-%define gcc_args_x64 -lvpl
+%define gcc_args_x64 -lvpl -lSvtAv1Enc
 %endif
 
 # These plus "--no-harden" at configure time set proper compiler flags:

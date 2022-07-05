@@ -1,0 +1,24 @@
+diff -Naur HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f.old/gtk/configure.ac HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f/gtk/configure.ac
+--- HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f.old/gtk/configure.ac	2022-07-06 15:01:50.618302295 +0200
++++ HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f/gtk/configure.ac	2022-07-06 15:02:01.982507350 +0200
+@@ -203,7 +203,7 @@
+ 
+ AM_CONDITIONAL([MINGW], [test "x$mingw_flag" = "xyes"])
+ 
+-HB_LIBS="$HB_LIBS -lhandbrake -lavformat -lavfilter -lavcodec -lavutil -ldav1d -lswresample -lpostproc -ldvdnav -ldvdread -lmp3lame -lvorbis -lvorbisenc -logg -lswscale -ltheoraenc -ltheoradec -lvpx -lz -lbz2 -lbluray -lass -lfontconfig -lfreetype -lxml2 -ljansson -lopus -lspeex -lturbojpeg -llzma -lzimg -lSvtAv1Enc"
++HB_LIBS="$HB_LIBS -lhandbrake -lavformat -lavfilter -lavcodec -lavutil -ldav1d -lswresample -lpostproc -ldvdnav -ldvdread -lmp3lame -lvorbis -lvorbisenc -logg -lswscale -ltheoraenc -ltheoradec -lvpx -lz -lbz2 -lbluray -lass -lfontconfig -lfreetype -lxml2 -ljansson -lopus -lspeex -lturbojpeg -llzma -lzimg"
+ HB_CPPFLAGS="$HB_CPPFLAGS $HBINC"
+ 
+ PKG_CHECK_MODULES([x264], [x264], sys_x264=yes, sys_x264=no)
+diff -Naur HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f.old/test/module.defs HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f/test/module.defs
+--- HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f.old/test/module.defs	2022-07-06 15:01:50.672303269 +0200
++++ HandBrake-f8e5306084f7e99f2627fffd0e414d608370192f/test/module.defs	2022-07-06 15:02:09.512643223 +0200
+@@ -17,7 +17,7 @@
+         ass avformat avfilter avcodec avutil swresample postproc mp3lame dvdnav \
+         dvdread fribidi swscale vpx theoraenc theoradec vorbis vorbisenc ogg \
+         x264 bluray freetype xml2 bz2 z jansson harfbuzz opus speex lzma dav1d \
+-        turbojpeg zimg SvtAv1Enc
++        turbojpeg zimg
+ 
+ ifeq (,$(filter $(HOST.system),darwin cygwin mingw))
+     TEST.GCC.l += fontconfig
