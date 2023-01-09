@@ -1,13 +1,13 @@
 %global commit0 a698e5395e5e1257e8c4b2b13b9928343c854a78
 %global date 20221110
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
+%global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
 Version:        1.6.0
-Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        7%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -225,6 +225,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Jan 09 2023 Simone Caronni <negativo17@gmail.com> - 1.6.0-7
+- Update to final 1.6.0 release.
+
 * Thu Dec 08 2022 Simone Caronni <negativo17@gmail.com> - 1.6.0-6.20221208gita698e53
 - Update to latest snapshot.
 
