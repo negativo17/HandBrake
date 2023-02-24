@@ -1,13 +1,13 @@
 %global commit0 6faee6042a61ab18a50ec68e8a46d5b08bbdb838
 %global date 20230108
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
+%global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
 Version:        1.6.1
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -24,6 +24,7 @@ Patch0:         %{name}-nostrip.patch
 Patch1:         %{name}-deps.patch
 # Do not try to link svt-av1 on aarch64
 Patch2:         %{name}-aarch64-build.patch
+Patch3:         https://github.com/HandBrake/HandBrake/commit/ba0ca9362907bc01744390a32836b43ef4be41c3.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  bzip2-devel
@@ -242,6 +243,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri Feb 24 2023 Simone Caronni <negativo17@gmail.com> - 1.6.1-2
+- Update to official 1.6.1 release with patches.
+
 * Mon Jan 09 2023 Simone Caronni <negativo17@gmail.com> - 1.6.1-1.20230108git6faee60
 - Update to latest 1.6.1 snapshot.
 
