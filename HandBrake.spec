@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.6.2
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -158,16 +158,11 @@ export https_proxy=http://127.0.0.1
 # By default the project is built with optimizations for speed and no debug.
 # Override configure settings by passing RPM_OPT_FLAGS and disabling preset
 # debug options.
-
-%ifarch x86_64
-%define gcc_args_x64 -lvpl -lSvtAv1Enc
-%endif
-
 # These plus "--no-harden" at configure time set proper compiler flags:
 cat > custom.defs << EOF
 GCC.args.c_std =
 GCC.args.cxx_std =
-GCC.args.O.speed = %build_cflags
+GCC.args.O.speed = %build_cflags -I%{_includedir}/vpl
 GCC.args.g.none =
 GCC.args.strip =
 EOF
@@ -225,6 +220,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Fri Mar 17 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-2.20230310gitaf134d2
+- Remove leftovers from GCC settings.
+
 * Tue Mar 14 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-1.20230310gitaf134d2
 - Update to latest 1.6.2 snapshot.
 
