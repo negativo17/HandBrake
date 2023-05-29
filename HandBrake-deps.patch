@@ -1,7 +1,7 @@
-diff -Naur HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438.old/make/configure.py HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438/make/configure.py
---- HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438.old/make/configure.py	2022-04-07 20:29:28.937147543 +0200
-+++ HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438/make/configure.py	2022-04-07 20:30:17.205994569 +0200
-@@ -1655,9 +1655,9 @@
+diff -Naur HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970.old/make/configure.py HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970/make/configure.py
+--- HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970.old/make/configure.py	2023-05-29 18:43:10.321366704 +0200
++++ HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970/make/configure.py	2023-05-29 18:44:44.830938050 +0200
+@@ -1668,9 +1668,9 @@
          libtool    = ToolProbe( 'LIBTOOL.exe',    'libtool',    'libtool', abort=True )
          lipo       = ToolProbe( 'LIPO.exe',       'lipo',       'lipo', abort=False )
          pkgconfig  = ToolProbe( 'PKGCONFIG.exe',  'pkgconfig',  'pkg-config', abort=True, minversion=[0,27,0] )
@@ -11,10 +11,10 @@ diff -Naur HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438.old/make/configure
 +        meson      = ToolProbe( 'MESON.exe',      'meson',      'meson', abort=False, minversion=[0,47,0] )
 +        nasm       = ToolProbe( 'NASM.exe',       'asm',        'nasm', abort=False, minversion=[2,13,0] )
 +        ninja      = ToolProbe( 'NINJA.exe',      'ninja',      'ninja-build', 'ninja', abort=False )
+         cargo      = ToolProbe( 'CARGO.exe',      'cargo',        'cargo', abort=False )
+         cargoc     = ToolProbe( 'CARGO-C.exe',    'cargo-cbuild', 'cargo-cbuild', abort=False )
  
-         xcodebuild = ToolProbe( 'XCODEBUILD.exe', 'xcodebuild', 'xcodebuild', abort=(True if (not xcode_opts['disabled'] and (build_tuple.match('*-*-darwin*') and cross is None)) else False), versionopt='-version', minversion=[10,3,0] )
- 
-@@ -1748,7 +1748,7 @@
+@@ -1773,7 +1773,7 @@
      ## Additional library and tool checks
      #####################################
      # Requires oneVPL which requires CMake 3.16.3 or later
@@ -23,9 +23,9 @@ diff -Naur HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438.old/make/configure
      Tools.cmake.__init__( Tools.cmake.var, Tools.cmake.option, Tools.cmake.name, **Tools.cmake.kwargs )
      Tools.cmake.run()
      for action in Action.actions:
-diff -Naur HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438.old/test/module.defs HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438/test/module.defs
---- HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438.old/test/module.defs	2022-04-07 20:29:28.942147631 +0200
-+++ HandBrake-d719d8a12145ea90cff61eb4f469b79cfe01d438/test/module.defs	2022-04-07 20:30:07.418822823 +0200
+diff -Naur HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970.old/test/module.defs HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970/test/module.defs
+--- HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970.old/test/module.defs	2023-05-29 18:43:10.327366803 +0200
++++ HandBrake-ff5fe3593695ffa91b5fc7dc5f9afc8a84b6a970/test/module.defs	2023-05-29 18:44:28.854672428 +0200
 @@ -23,6 +23,10 @@
      TEST.GCC.l += fontconfig
  endif
