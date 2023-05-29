@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.6.2
-Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -178,8 +178,10 @@ EOF
     --disable-update-checks \
     --enable-asm \
     --enable-fdk-aac \
+    --enable-ffmpeg-aac \
     --enable-gst \
     --enable-numa \
+    --enable-nvdec \
     --enable-nvenc \
 %ifarch x86_64
     --enable-qsv \
@@ -237,6 +239,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon May 29 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-3.20230310gitaf134d2
+- Adjust configure options.
+
 * Fri Mar 17 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-2.20230310gitaf134d2
 - Remove leftovers from GCC settings.
 
