@@ -22,8 +22,6 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 Patch0:         %{name}-nostrip.patch
 # Adjust dependencies when using system libraries
 Patch1:         %{name}-deps.patch
-# Do not try to link svt-av1 on aarch64
-Patch2:         %{name}-aarch64-build.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
@@ -74,6 +72,7 @@ BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
 BuildRequires:  pkgconfig(numa)
 BuildRequires:  python3
 BuildRequires:  speex-devel >= 1.2
+BuildRequires:  svt-av1-devel
 BuildRequires:  tar
 BuildRequires:  turbojpeg-devel >= 1.5.3
 BuildRequires:  wget
@@ -86,7 +85,6 @@ BuildRequires:  zimg-devel >= 3.0.1
 %ifarch x86_64
 BuildRequires:  intel-mediasdk-devel
 BuildRequires:  oneVPL-devel
-BuildRequires:  svt-av1-devel
 %endif
 
 Requires:       hicolor-icon-theme
@@ -224,6 +222,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %changelog
 * Mon Jun 05 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-4.20230604git131bdd6
 - Update to latest 1.6.x branch snapshot.
+- Remove wrongly applied patch.
 
 * Mon May 29 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-3.20230310gitaf134d2
 - Adjust configure options.
