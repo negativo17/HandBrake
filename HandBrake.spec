@@ -22,8 +22,6 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 Patch0:         %{name}-nostrip.patch
 # Adjust dependencies when using system libraries
 Patch1:         %{name}-deps.patch
-# Do not try to link svt-av1 on aarch64
-Patch2:         %{name}-aarch64-build.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  bzip2-devel
@@ -241,6 +239,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Mon Jun 05 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-4.20230604git131bdd6
 - Update to latest 1.6.x branch snapshot.
+- Remove wrongly applied patch.
 
 * Mon May 29 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-3.20230310gitaf134d2
 - Adjust configure options.
