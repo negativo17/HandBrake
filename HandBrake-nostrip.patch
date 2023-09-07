@@ -1,10 +1,11 @@
---- a/gtk/module.rules
-+++ b/gtk/module.rules
-@@ -21,6 +21,7 @@ $(GTK.CONFIGURE.stamp): $(GTK.src/)confi
+diff -Naur HandBrake-8a92dfc07ca9f24bbdeaa695cfd6129072e3000e.old/gtk/module.rules HandBrake-8a92dfc07ca9f24bbdeaa695cfd6129072e3000e/gtk/module.rules
+--- HandBrake-8a92dfc07ca9f24bbdeaa695cfd6129072e3000e.old/gtk/module.rules	2023-09-01 07:54:56.126434085 +0200
++++ HandBrake-8a92dfc07ca9f24bbdeaa695cfd6129072e3000e/gtk/module.rules	2023-08-31 18:38:23.000000000 +0200
+@@ -21,7 +21,6 @@
  		CXX="$(GCC.gxx)" \
  		CFLAGS="$(call fn.ARGS,GTK.GCC,.g .O *D *W ?extra)" \
  		LDFLAGS="$(call fn.ARGS,GTK.GCC,?strip .g .O ?extra.exe)" \
-+		STRIP="$(STRIP.exe)" \
+-		STRIP="$(STRIP.exe)" \
  		PYTHON="$(PYTHON.exe)" \
  		--prefix=$(PREFIX) \
  		--with-hb=$(call fn.ABSOLUTE,$(BUILD/))

@@ -1,5 +1,5 @@
-%global commit0 8e8f0680b521f4ce6159c675969518731fc9c864
-%global date 20230606
+%global commit0 c9fc5c3636646df92749754015e5afb0678bc540
+%global date 20230906
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 #global tag %{version}
 
@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.7.0
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -18,10 +18,8 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{version}.tar.gz#/%{
 Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 %endif
 
-# Pass strip tool override to gtk/configure
-Patch0:         %{name}-nostrip.patch
 # Adjust dependencies when using system libraries
-Patch1:         %{name}-deps.patch
+Patch0:         %{name}-deps.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
@@ -32,6 +30,7 @@ BuildRequires:  fontconfig-devel
 BuildRequires:  libavcodec-devel >= 5.0.1
 BuildRequires:  libavfilter-devel >= 5.0.1
 BuildRequires:  libavformat-devel >= 5.0.1
+BuildRequires:  libdovi-devel >= 3.1.2
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
@@ -133,7 +132,7 @@ This package contains the command line version of the program.
 mkdir -p download
 
 # Use system libraries in place of bundled ones
-for module in libdav1d fdk-aac ffmpeg libdvdnav libdvdread libbluray libmfx libvpl nvenc svt-av1 x265 zimg; do
+for module in fdk-aac ffmpeg libdav1d libdovi libdvdnav libdvdread libbluray libmfx libvpl nvenc svt-av1 x265 zimg; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -175,6 +174,7 @@ EOF
     --enable-fdk-aac \
     --enable-ffmpeg-aac \
     --enable-gst \
+    --enable-libdovi \
     --enable-numa \
     --enable-nvdec \
     --enable-nvenc \
@@ -220,6 +220,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Thu Sep 07 2023 Simone Caronni <negativo17@gmail.com> - 1.7.0-2.20230906gitc9fc5c3
+- Update to latest snapshot.
+
 * Wed Jun 07 2023 Simone Caronni <negativo17@gmail.com> - 1.7.0-1.20230606git8e8f068
 - Update to latest 1.7.0 snapshot.
 
