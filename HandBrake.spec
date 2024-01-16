@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.6.2
-Release:        5%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        6%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -237,6 +237,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Jan 16 2024 Simone Caronni <negativo17@gmail.com> - 1.6.2-6.20230806gitb94291a
+- Rebuild for FFMpeg changes.
+
 * Tue Oct 10 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-5.20230806gitb94291a
 - Update to latest 1.6.x snapshot.
 
