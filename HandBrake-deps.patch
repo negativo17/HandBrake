@@ -1,6 +1,6 @@
-diff -Naur HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/libhb/rpu.c HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf/libhb/rpu.c
---- HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/libhb/rpu.c	2023-10-10 07:46:42.273913958 +0200
-+++ HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf/libhb/rpu.c	2023-10-10 07:46:52.175091628 +0200
+diff -Naur HandBrake-1.7.2.old/libhb/rpu.c HandBrake-1.7.2/libhb/rpu.c
+--- HandBrake-1.7.2.old/libhb/rpu.c	2024-01-16 13:19:01.676331256 +0100
++++ HandBrake-1.7.2/libhb/rpu.c	2024-01-16 13:19:15.258565106 +0100
 @@ -10,7 +10,7 @@
  #include "handbrake/handbrake.h"
  
@@ -10,23 +10,21 @@ diff -Naur HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/libhb/rpu.c Ha
  #endif
  
  #define RPU_DEFAULT_MODE 1
-diff -Naur HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/make/configure.py HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf/make/configure.py
---- HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/make/configure.py	2023-10-10 07:46:42.417916542 +0200
-+++ HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf/make/configure.py	2023-10-10 07:47:30.151773098 +0200
-@@ -1689,9 +1689,9 @@
-         libtool    = ToolProbe( 'LIBTOOL.exe',    'libtool',    'libtool', abort=True )
+diff -Naur HandBrake-1.7.2.old/make/configure.py HandBrake-1.7.2/make/configure.py
+--- HandBrake-1.7.2.old/make/configure.py	2024-01-16 13:19:01.763332754 +0100
++++ HandBrake-1.7.2/make/configure.py	2024-01-16 13:19:47.804125462 +0100
+@@ -1689,8 +1689,8 @@
          lipo       = ToolProbe( 'LIPO.exe',       'lipo',       'lipo', abort=False )
          pkgconfig  = ToolProbe( 'PKGCONFIG.exe',  'pkgconfig',  'pkg-config', abort=True, minversion=[0,27,0] )
--        meson      = ToolProbe( 'MESON.exe',      'meson',      'meson', abort=True, minversion=[0,51,0] )
+         meson      = ToolProbe( 'MESON.exe',      'meson',      'meson', abort=True, minversion=[0,51,0] )
 -        nasm       = ToolProbe( 'NASM.exe',       'asm',        'nasm', abort=True, minversion=[2,13,0] )
 -        ninja      = ToolProbe( 'NINJA.exe',      'ninja',      'ninja-build', 'ninja', abort=True )
-+        meson      = ToolProbe( 'MESON.exe',      'meson',      'meson', abort=False, minversion=[0,51,0] )
 +        nasm       = ToolProbe( 'NASM.exe',       'asm',        'nasm', abort=False, minversion=[2,13,0] )
 +        ninja      = ToolProbe( 'NINJA.exe',      'ninja',      'ninja-build', 'ninja', abort=False )
          cargo      = ToolProbe( 'CARGO.exe',      'cargo',        'cargo', abort=False )
          cargoc     = ToolProbe( 'CARGO-C.exe',    'cargo-cbuild', 'cargo-cbuild', abort=False )
  
-@@ -1792,7 +1792,7 @@
+@@ -1791,7 +1791,7 @@
      ## Additional library and tool checks
      #####################################
      # Requires oneVPL which requires CMake 3.16.3 or later
@@ -35,9 +33,9 @@ diff -Naur HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/make/configure
      Tools.cmake.__init__( Tools.cmake.var, Tools.cmake.option, Tools.cmake.name, **Tools.cmake.kwargs )
      Tools.cmake.run()
      for action in Action.actions:
-diff -Naur HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/test/module.defs HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf/test/module.defs
---- HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf.old/test/module.defs	2023-10-10 07:46:42.427916721 +0200
-+++ HandBrake-2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf/test/module.defs	2023-10-10 07:46:52.179091700 +0200
+diff -Naur HandBrake-1.7.2.old/test/module.defs HandBrake-1.7.2/test/module.defs
+--- HandBrake-1.7.2.old/test/module.defs	2024-01-16 13:19:01.769332857 +0100
++++ HandBrake-1.7.2/test/module.defs	2024-01-16 13:19:15.294565726 +0100
 @@ -23,6 +23,14 @@
      TEST.GCC.l += fontconfig
  endif

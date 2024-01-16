@@ -1,13 +1,13 @@
 %global commit0 2e91369bae27841e0ffdcbe2e0fac2aaa7e779cf
 %global date 20231008
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
+%global tag %{version}
 
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.7.0
-Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.7.2
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -27,9 +27,9 @@ BuildRequires:  bzip2-devel
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  fontconfig-devel
-BuildRequires:  libavcodec-devel >= 5.0.1
-BuildRequires:  libavfilter-devel >= 5.0.1
-BuildRequires:  libavformat-devel >= 5.0.1
+BuildRequires:  libavcodec-devel >= 6.1.1
+BuildRequires:  libavfilter-devel >= 6.1.1
+BuildRequires:  libavformat-devel >= 6.1.1
 BuildRequires:  libdovi-devel >= 3.1.2
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
@@ -64,6 +64,7 @@ BuildRequires:  libvpx-devel >= 1.7.0
 BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
+BuildRequires:  meson
 BuildRequires:  nv-codec-headers >= 11
 BuildRequires:  opus-devel >= 1.3
 BuildRequires:  patch
@@ -85,8 +86,6 @@ BuildRequires:  zimg-devel >= 3.0.1
 BuildRequires:  intel-mediasdk-devel
 BuildRequires:  oneVPL-devel
 %endif
-
-Requires:       hicolor-icon-theme
 
 %description
 %{name} is a general-purpose, free, open-source, cross-platform, multithreaded
@@ -129,15 +128,12 @@ This package contains the command line version of the program.
 %else
 %autosetup -p1 -n %{name}-%{commit0}
 %endif
-mkdir -p download
+mkdir -p download build/contrib/include
 
 # Use system libraries in place of bundled ones
 for module in fdk-aac ffmpeg libdav1d libdovi libdvdnav libdvdread libbluray libmfx libvpl nvenc svt-av1 x265 zimg; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
-
-# Fix desktop file
-sed -i -e 's/%{desktop_id}.svg/%{desktop_id}/g' gtk/src/%{desktop_id}.desktop
 
 %build
 echo "HASH=%{commit0}" > version.txt
@@ -183,6 +179,7 @@ EOF
 %endif
     --enable-vce \
     --enable-x265 \
+    --force \
     --no-harden \
     --prefix=%{_prefix}
 
@@ -192,13 +189,11 @@ EOF
 %make_install -C build
 
 # Desktop file, icons from FlatPak build (more complete)
-rm -f %{buildroot}/%{_datadir}/applications/ghb.desktop \
-    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
+#rm -f %{buildroot}/%{_datadir}/applications/ghb.desktop \
+#    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
 
-install -D -p -m 644 gtk/src/%{desktop_id}.desktop \
-    %{buildroot}/%{_datadir}/applications/%{desktop_id}.desktop
-install -D -p -m 644 gtk/src/%{desktop_id}.svg \
-    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
+#install -D -p -m 644 gtk/src/%{desktop_id}.svg \
+#    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
 
 %find_lang ghb
 
@@ -220,6 +215,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Tue Jan 16 2024 Simone Caronni <negativo17@gmail.com> - 1.7.2-1
+- Update to version 1.7.2.
+
 * Mon Oct 09 2023 Simone Caronni <negativo17@gmail.com> - 1.7.0-3.20231008git2e91369
 - Update to latest snapshot.
 
