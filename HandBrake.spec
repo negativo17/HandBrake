@@ -188,13 +188,6 @@ EOF
 %install
 %make_install -C build
 
-# Desktop file, icons from FlatPak build (more complete)
-#rm -f %{buildroot}/%{_datadir}/applications/ghb.desktop \
-#    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/hb-icon.svg
-
-#install -D -p -m 644 gtk/src/%{desktop_id}.svg \
-#    %{buildroot}/%{_datadir}/icons/hicolor/scalable/apps/%{desktop_id}.svg
-
 %find_lang ghb
 
 %check
