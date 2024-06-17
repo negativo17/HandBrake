@@ -6,8 +6,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.7.3
-Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.8.0
+Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -20,71 +20,69 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 
 # Adjust dependencies when using system libraries
 Patch0:         %{name}-deps.patch
+# https://github.com/HandBrake/HandBrake/commit/fb2397df5d25226493e9ec36671469e4906d8842
+Patch1:         %{name}-norpu.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
 BuildRequires:  bzip2-devel
-BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  fontconfig-devel
-BuildRequires:  libavcodec-devel >= 6.1.1
-BuildRequires:  libavfilter-devel >= 6.1.1
-BuildRequires:  libavformat-devel >= 6.1.1
-BuildRequires:  libdovi-devel >= 3.1.2
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
-BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  harfbuzz-devel >= 1.3.2
-BuildRequires:  intltool
 BuildRequires:  jansson-devel >= 2.10
-BuildRequires:  lame-devel >= 3.100
-BuildRequires:  liba52-devel >= 0.7.4
-BuildRequires:  libappindicator-gtk3-devel
 BuildRequires:  libappstream-glib
 BuildRequires:  libass-devel >= 0.13.4
-BuildRequires:  libbluray-devel >= 1.0.2
 BuildRequires:  libdav1d-devel >= 0.3.0
 BuildRequires:  libdrm-devel
-BuildRequires:  libdvdnav-devel >= 5.0.3
-BuildRequires:  libdvdread-devel >= 5.0.3
-BuildRequires:  libfdk-aac-devel >= 2.0.1
-BuildRequires:  libgudev1-devel
 BuildRequires:  libva-devel
-BuildRequires:  libmpeg2-devel >= 0.5.1
-BuildRequires:  libnotify-devel
-BuildRequires:  libogg-devel >= 1.3.0
-BuildRequires:  librsvg2-devel
 BuildRequires:  libsamplerate-devel >= 0.1.8
-BuildRequires:  libtheora-devel >= 1.1.1
 BuildRequires:  libtool
 BuildRequires:  libva-devel
-BuildRequires:  libvorbis-devel >= 1.3.3
-BuildRequires:  libvpx-devel >= 1.7.0
-BuildRequires:  libxml2-devel
 BuildRequires:  m4
 BuildRequires:  make
 BuildRequires:  meson
 BuildRequires:  nv-codec-headers >= 11
-BuildRequires:  opus-devel >= 1.3
 BuildRequires:  patch
-BuildRequires:  pkgconfig(gtk+-3.0) >= 3.16
+BuildRequires:  pkgconfig(dovi)
+BuildRequires:  pkgconfig(dvdnav)
+BuildRequires:  pkgconfig(dvdread)
+BuildRequires:  pkgconfig(fdk-aac)
+BuildRequires:  pkgconfig(gio-2.0) >= 2.68
+BuildRequires:  pkgconfig(glib-2.0) >= 2.68
+BuildRequires:  pkgconfig(gmodule-2.0) >= 2.68
+BuildRequires:  pkgconfig(gthread-2.0) >= 2.68
+BuildRequires:  pkgconfig(gtk4) >= 4.4
+BuildRequires:  pkgconfig(jansson)
+BuildRequires:  pkgconfig(libass)
+BuildRequires:  pkgconfig(libavcodec)
+BuildRequires:  pkgconfig(libavfilter)
+BuildRequires:  pkgconfig(libavformat)
+BuildRequires:  pkgconfig(libavutil)
+BuildRequires:  pkgconfig(libbluray)
+BuildRequires:  pkgconfig(libswresample)
+BuildRequires:  pkgconfig(libswscale)
+BuildRequires:  pkgconfig(libturbojpeg)
+BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(numa)
+BuildRequires:  pkgconfig(ogg)
+BuildRequires:  pkgconfig(SvtAv1Enc)
+BuildRequires:  pkgconfig(theoradec)
+BuildRequires:  pkgconfig(theoraenc)
+BuildRequires:  pkgconfig(vorbis)
+BuildRequires:  pkgconfig(vorbisenc)
+BuildRequires:  pkgconfig(x264)
+BuildRequires:  pkgconfig(x265)
 BuildRequires:  python3
-BuildRequires:  speex-devel >= 1.2
-BuildRequires:  svt-av1-devel
 BuildRequires:  tar
-BuildRequires:  turbojpeg-devel >= 1.5.3
 BuildRequires:  wget
-BuildRequires:  x264-devel >= 1:0.155
-BuildRequires:  x265-devel >= 1:3.2.1
 BuildRequires:  zlib-devel
-BuildRequires:  xz-devel
 BuildRequires:  zimg-devel >= 3.0.1
 
 %ifarch x86_64
-BuildRequires:  intel-mediasdk-devel
-BuildRequires:  oneVPL-devel
+BuildRequires:  libvpl-devel
 %endif
 
 %description
@@ -131,7 +129,7 @@ This package contains the command line version of the program.
 mkdir -p download build/contrib/include
 
 # Use system libraries in place of bundled ones
-for module in fdk-aac ffmpeg libdav1d libdovi libdvdnav libdvdread libbluray libmfx libvpl nvenc svt-av1 x265 zimg; do
+for module in fdk-aac ffmpeg libdav1d libdovi libdvdnav libdvdread libbluray libvpl nvenc svt-av1 x265 zimg; do
     sed -i -e "/MODULES += contrib\/$module/d" make/include/main.defs
 done
 
@@ -208,6 +206,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Jun 17 2024 Simone Caronni <negativo17@gmail.com> - 1.8.0-1
+- Update to 1.8.0.
+
 * Tue Jun 04 2024 Simone Caronni <negativo17@gmail.com> - 1.7.3-2
 - Rebuild for updated SVT-AV1.
 

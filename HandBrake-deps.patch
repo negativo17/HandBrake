@@ -1,19 +1,19 @@
-diff -Naur HandBrake-1.7.2.old/libhb/rpu.c HandBrake-1.7.2/libhb/rpu.c
---- HandBrake-1.7.2.old/libhb/rpu.c	2024-01-16 13:19:01.676331256 +0100
-+++ HandBrake-1.7.2/libhb/rpu.c	2024-01-16 13:19:15.258565106 +0100
-@@ -10,7 +10,7 @@
- #include "handbrake/handbrake.h"
+diff -Naur HandBrake-1.8.0.old/libhb/rpu.c HandBrake-1.8.0/libhb/rpu.c
+--- HandBrake-1.8.0.old/libhb/rpu.c	2024-06-17 10:25:01.168082625 +0200
++++ HandBrake-1.8.0/libhb/rpu.c	2024-06-17 10:25:06.524112050 +0200
+@@ -11,7 +11,7 @@
+ #include "handbrake/rpu.h"
  
  #if HB_PROJECT_FEATURE_LIBDOVI
 -#include "libdovi/rpu_parser.h"
 +#include <libdovi/rpu_parser.h>
  #endif
  
- #define RPU_DEFAULT_MODE 1
-diff -Naur HandBrake-1.7.2.old/make/configure.py HandBrake-1.7.2/make/configure.py
---- HandBrake-1.7.2.old/make/configure.py	2024-01-16 13:19:01.763332754 +0100
-+++ HandBrake-1.7.2/make/configure.py	2024-01-16 13:19:47.804125462 +0100
-@@ -1689,8 +1689,8 @@
+ struct hb_filter_private_s
+diff -Naur HandBrake-1.8.0.old/make/configure.py HandBrake-1.8.0/make/configure.py
+--- HandBrake-1.8.0.old/make/configure.py	2024-06-17 10:25:01.191082751 +0200
++++ HandBrake-1.8.0/make/configure.py	2024-06-17 10:25:06.524112050 +0200
+@@ -1684,8 +1684,8 @@
          lipo       = ToolProbe( 'LIPO.exe',       'lipo',       'lipo', abort=False )
          pkgconfig  = ToolProbe( 'PKGCONFIG.exe',  'pkgconfig',  'pkg-config', abort=True, minversion=[0,27,0] )
          meson      = ToolProbe( 'MESON.exe',      'meson',      'meson', abort=True, minversion=[0,51,0] )
@@ -24,7 +24,7 @@ diff -Naur HandBrake-1.7.2.old/make/configure.py HandBrake-1.7.2/make/configure.
          cargo      = ToolProbe( 'CARGO.exe',      'cargo',        'cargo', abort=False )
          cargoc     = ToolProbe( 'CARGO-C.exe',    'cargo-cbuild', 'cargo-cbuild', abort=False )
  
-@@ -1791,7 +1791,7 @@
+@@ -1786,7 +1786,7 @@
      ## Additional library and tool checks
      #####################################
      # Requires oneVPL which requires CMake 3.16.3 or later
@@ -33,21 +33,33 @@ diff -Naur HandBrake-1.7.2.old/make/configure.py HandBrake-1.7.2/make/configure.
      Tools.cmake.__init__( Tools.cmake.var, Tools.cmake.option, Tools.cmake.name, **Tools.cmake.kwargs )
      Tools.cmake.run()
      for action in Action.actions:
-diff -Naur HandBrake-1.7.2.old/test/module.defs HandBrake-1.7.2/test/module.defs
---- HandBrake-1.7.2.old/test/module.defs	2024-01-16 13:19:01.769332857 +0100
-+++ HandBrake-1.7.2/test/module.defs	2024-01-16 13:19:15.294565726 +0100
-@@ -23,6 +23,14 @@
-     TEST.GCC.l += fontconfig
+diff -Naur HandBrake-1.8.0.old/gtk/meson.build HandBrake-1.8.0/gtk/meson.build
+--- HandBrake-1.8.0.old/gtk/meson.build	2024-06-17 10:25:01.162082592 +0200
++++ HandBrake-1.8.0/gtk/meson.build	2024-06-17 10:43:29.410297513 +0200
+@@ -62,6 +62,8 @@
  endif
  
-+ifeq (1,$(FEATURE.libdovi))
-+    TEST.GCC.l += dovi
+ if get_option('qsv').enabled()
++  ghb_deps += dependency('libva')
++  ghb_deps += dependency('libva-drm')
+   ghb_deps += dependency('vpl')
+ endif
+ 
+diff -Naur HandBrake-1.8.0.old/test/module.defs HandBrake-1.8.0/test/module.defs
+--- HandBrake-1.8.0.old/test/module.defs	2024-06-17 10:25:01.193082762 +0200
++++ HandBrake-1.8.0/test/module.defs	2024-06-17 10:44:56.554529243 +0200
+@@ -22,6 +22,14 @@
+ 
+ TEST.pkgconfig_libs += $(foreach m,$(MODULES.NAMES),$($m.OSL.libs))
+ 
++ifeq (1,$(FEATURE.qsv))
++    TEST.pkgconfig_libs += libva libva-drm vpl
 +endif
 +
 +ifeq (1,$(FEATURE.x265))
-+    TEST.GCC.l += x265
++    TEST.pkgconfig_libs += x265
 +endif
 +
- ifeq (1,$(FEATURE.qsv))
-     TEST.GCC.l += vpl
- ifneq (,$(filter $(HOST.system),linux freebsd))
+ ifeq (1,$(FEATURE.flatpak))
+     TEST.pkgconfig_libs += glib-2.0
+ endif
