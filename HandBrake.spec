@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.7.3
-Release:        2%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Release:        3%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -24,7 +24,6 @@ Patch0:         %{name}-deps.patch
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
 BuildRequires:  bzip2-devel
-BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  fontconfig-devel
 BuildRequires:  libavcodec-devel >= 6.1.1
@@ -34,13 +33,9 @@ BuildRequires:  libdovi-devel >= 3.1.2
 BuildRequires:  freetype-devel >= 2.4.11
 BuildRequires:  fribidi-devel >= 0.19.4
 BuildRequires:  gcc-c++
-BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  harfbuzz-devel >= 1.3.2
-BuildRequires:  intltool
 BuildRequires:  jansson-devel >= 2.10
 BuildRequires:  lame-devel >= 3.100
-BuildRequires:  liba52-devel >= 0.7.4
-BuildRequires:  libappindicator-gtk3-devel
 BuildRequires:  libappstream-glib
 BuildRequires:  libass-devel >= 0.13.4
 BuildRequires:  libbluray-devel >= 1.0.2
@@ -49,12 +44,8 @@ BuildRequires:  libdrm-devel
 BuildRequires:  libdvdnav-devel >= 5.0.3
 BuildRequires:  libdvdread-devel >= 5.0.3
 BuildRequires:  libfdk-aac-devel >= 2.0.1
-BuildRequires:  libgudev1-devel
 BuildRequires:  libva-devel
-BuildRequires:  libmpeg2-devel >= 0.5.1
-BuildRequires:  libnotify-devel
 BuildRequires:  libogg-devel >= 1.3.0
-BuildRequires:  librsvg2-devel
 BuildRequires:  libsamplerate-devel >= 0.1.8
 BuildRequires:  libtheora-devel >= 1.1.1
 BuildRequires:  libtool
@@ -79,12 +70,10 @@ BuildRequires:  wget
 BuildRequires:  x264-devel >= 1:0.155
 BuildRequires:  x265-devel >= 1:3.2.1
 BuildRequires:  zlib-devel
-BuildRequires:  xz-devel
 BuildRequires:  zimg-devel >= 3.0.1
 
 %ifarch x86_64
-BuildRequires:  intel-mediasdk-devel
-BuildRequires:  oneVPL-devel
+BuildRequires:  libvpl-devel
 %endif
 
 %description
@@ -208,6 +197,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon Jun 17 2024 Simone Caronni <negativo17@gmail.com> - 1.7.3-3
+- Rebuild for updated dependencies.
+
 * Tue Jun 04 2024 Simone Caronni <negativo17@gmail.com> - 1.7.3-2
 - Rebuild for updated SVT-AV1.
 
