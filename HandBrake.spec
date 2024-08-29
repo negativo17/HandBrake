@@ -6,8 +6,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.8.0
-Release:        1%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        1.8.2
+Release:        1%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -20,8 +20,6 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 
 # Adjust dependencies when using system libraries
 Patch0:         %{name}-deps.patch
-# https://github.com/HandBrake/HandBrake/commit/fb2397df5d25226493e9ec36671469e4906d8842
-Patch1:         %{name}-norpu.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
@@ -206,6 +204,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Aug 28 2024 Simone Caronni <negativo17@gmail.com> - 1.8.2-1
+- Update to 1.8.2.
+
 * Mon Jun 17 2024 Simone Caronni <negativo17@gmail.com> - 1.8.0-1
 - Update to 1.8.0.
 
