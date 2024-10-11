@@ -1,6 +1,18 @@
-diff -Naur HandBrake-1.8.0.old/libhb/rpu.c HandBrake-1.8.0/libhb/rpu.c
---- HandBrake-1.8.0.old/libhb/rpu.c	2024-06-17 10:25:01.168082625 +0200
-+++ HandBrake-1.8.0/libhb/rpu.c	2024-06-17 10:25:06.524112050 +0200
+diff -Naur HandBrake-1.8.2.old/gtk/meson.build HandBrake-1.8.2/gtk/meson.build
+--- HandBrake-1.8.2.old/gtk/meson.build	2024-10-11 19:16:00.810532466 +0200
++++ HandBrake-1.8.2/gtk/meson.build	2024-10-11 19:16:04.986563740 +0200
+@@ -62,6 +62,8 @@
+ endif
+ 
+ if get_option('qsv').enabled()
++  ghb_deps += dependency('libva')
++  ghb_deps += dependency('libva-drm')
+   ghb_deps += dependency('vpl')
+ endif
+ 
+diff -Naur HandBrake-1.8.2.old/libhb/rpu.c HandBrake-1.8.2/libhb/rpu.c
+--- HandBrake-1.8.2.old/libhb/rpu.c	2024-10-11 19:16:00.817532518 +0200
++++ HandBrake-1.8.2/libhb/rpu.c	2024-10-11 19:16:04.984563725 +0200
 @@ -11,7 +11,7 @@
  #include "handbrake/rpu.h"
  
@@ -10,9 +22,9 @@ diff -Naur HandBrake-1.8.0.old/libhb/rpu.c HandBrake-1.8.0/libhb/rpu.c
  #endif
  
  struct hb_filter_private_s
-diff -Naur HandBrake-1.8.0.old/make/configure.py HandBrake-1.8.0/make/configure.py
---- HandBrake-1.8.0.old/make/configure.py	2024-06-17 10:25:01.191082751 +0200
-+++ HandBrake-1.8.0/make/configure.py	2024-06-17 10:25:06.524112050 +0200
+diff -Naur HandBrake-1.8.2.old/make/configure.py HandBrake-1.8.2/make/configure.py
+--- HandBrake-1.8.2.old/make/configure.py	2024-10-11 19:16:00.840532691 +0200
++++ HandBrake-1.8.2/make/configure.py	2024-10-11 19:16:04.985563732 +0200
 @@ -1684,8 +1684,8 @@
          lipo       = ToolProbe( 'LIPO.exe',       'lipo',       'lipo', abort=False )
          pkgconfig  = ToolProbe( 'PKGCONFIG.exe',  'pkgconfig',  'pkg-config', abort=True, minversion=[0,27,0] )
@@ -33,22 +45,15 @@ diff -Naur HandBrake-1.8.0.old/make/configure.py HandBrake-1.8.0/make/configure.
      Tools.cmake.__init__( Tools.cmake.var, Tools.cmake.option, Tools.cmake.name, **Tools.cmake.kwargs )
      Tools.cmake.run()
      for action in Action.actions:
-diff -Naur HandBrake-1.8.0.old/gtk/meson.build HandBrake-1.8.0/gtk/meson.build
---- HandBrake-1.8.0.old/gtk/meson.build	2024-06-17 10:25:01.162082592 +0200
-+++ HandBrake-1.8.0/gtk/meson.build	2024-06-17 10:43:29.410297513 +0200
-@@ -62,6 +62,8 @@
- endif
+diff -Naur HandBrake-1.8.2.old/test/module.defs HandBrake-1.8.2/test/module.defs
+--- HandBrake-1.8.2.old/test/module.defs	2024-10-11 19:16:00.856532810 +0200
++++ HandBrake-1.8.2/test/module.defs	2024-10-11 19:16:14.203632765 +0200
+@@ -18,10 +18,18 @@
  
- if get_option('qsv').enabled()
-+  ghb_deps += dependency('libva')
-+  ghb_deps += dependency('libva-drm')
-   ghb_deps += dependency('vpl')
- endif
- 
-diff -Naur HandBrake-1.8.0.old/test/module.defs HandBrake-1.8.0/test/module.defs
---- HandBrake-1.8.0.old/test/module.defs	2024-06-17 10:25:01.193082762 +0200
-+++ HandBrake-1.8.0/test/module.defs	2024-06-17 10:44:56.554529243 +0200
-@@ -22,6 +22,14 @@
+ TEST.pkgconfig_libs = libass libavformat libavfilter libavcodec libavutil libswresample dvdnav \
+ 	dvdread libswscale theoraenc theoradec vorbis vorbisenc ogg x264 libbluray \
+-	jansson libturbojpeg SvtAv1Enc
++	jansson libturbojpeg SvtAv1Enc dovi
  
  TEST.pkgconfig_libs += $(foreach m,$(MODULES.NAMES),$($m.OSL.libs))
  
