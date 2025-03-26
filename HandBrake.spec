@@ -6,8 +6,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.8.2
-Release:        2%{?dist}
+Version:        1.9.2
+Release:        1%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -20,7 +20,6 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 
 # Adjust dependencies when using system libraries:
 Patch0:         %{name}-deps.patch
-Patch1:         https://github.com/HandBrake/HandBrake/commit/65ec04667e69918401a0af77948f0cd0930c2789.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
@@ -205,6 +204,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Mar 26 2025 Simone Caronni <negativo17@gmail.com> - 1.9.2-1
+- Update to 1.9.2.
+
 * Fri Oct 11 2024 Simone Caronni <negativo17@gmail.com> - 1.8.2-2
 - Add patch for x265 4.0.
 
