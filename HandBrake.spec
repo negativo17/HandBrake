@@ -6,7 +6,7 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.9.2
+Version:        1.10.2
 Release:        1%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
@@ -204,6 +204,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Oct 15 2025 Simone Caronni <negativo17@gmail.com> - 1.10.2-1
+- Update to 1.10.2.
+
 * Wed Mar 26 2025 Simone Caronni <negativo17@gmail.com> - 1.9.2-1
 - Update to 1.9.2.
 
