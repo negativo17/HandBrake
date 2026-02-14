@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.10.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -20,6 +20,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 
 # Adjust dependencies when using system libraries:
 Patch0:         %{name}-deps.patch
+Patch1:         https://patch-diff.githubusercontent.com/raw/HandBrake/HandBrake/pull/7201.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
@@ -204,6 +205,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sat Feb 14 2026 Simone Caronni <negativo17@gmail.com> - 1.10.2-2
+- Add FFMPeg 8.0 support.
+
 * Wed Oct 15 2025 Simone Caronni <negativo17@gmail.com> - 1.10.2-1
 - Update to 1.10.2.
 
