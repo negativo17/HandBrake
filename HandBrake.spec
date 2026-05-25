@@ -6,8 +6,8 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.10.2
-Release:        2%{?dist}
+Version:        1.11.1
+Release:        1%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -20,7 +20,8 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{commit0}.tar.gz#/%{
 
 # Adjust dependencies when using system libraries:
 Patch0:         %{name}-deps.patch
-Patch1:         https://patch-diff.githubusercontent.com/raw/HandBrake/HandBrake/pull/7201.patch
+# Allow building with SVT-AV1 < 4
+Patch1:         https://sources.debian.org/data/main/h/handbrake/1.11.1%2Bds1-1/debian/patches/0006-Set-extended_crf_qindex_offset-only-for-SVT-AV1-4.patch
 
 BuildRequires:  AMF-devel
 BuildRequires:  appstream
@@ -205,6 +206,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Mon May 25 2026 Simone Caronni <negativo17@gmail.com> - 1.11.1-1
+- Update to 1.11.1.
+
 * Sat Feb 14 2026 Simone Caronni <negativo17@gmail.com> - 1.10.2-2
 - Add FFMPeg 8.0 support.
 
