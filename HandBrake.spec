@@ -6,7 +6,7 @@
 %global desktop_id fr.handbrake.ghb
 
 Name:           HandBrake
-Version:        1.11.1
+Version:        1.11.2
 Release:        1%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
@@ -206,6 +206,10 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Wed Jun 17 2026 Simone Caronni <negativo17@gmail.com> - 1.11.2-1
+- Update to 1.11.2.
+- Trim changelog.
+
 * Mon May 25 2026 Simone Caronni <negativo17@gmail.com> - 1.11.1-1
 - Update to 1.11.1.
 
@@ -236,34 +240,3 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 
 * Tue Jan 16 2024 Simone Caronni <negativo17@gmail.com> - 1.7.2-1
 - Update to version 1.7.2.
-
-* Mon Oct 09 2023 Simone Caronni <negativo17@gmail.com> - 1.7.0-3.20231008git2e91369
-- Update to latest snapshot.
-
-* Thu Sep 07 2023 Simone Caronni <negativo17@gmail.com> - 1.7.0-2.20230906gitc9fc5c3
-- Update to latest snapshot.
-
-* Wed Jun 07 2023 Simone Caronni <negativo17@gmail.com> - 1.7.0-1.20230606git8e8f068
-- Update to latest 1.7.0 snapshot.
-
-* Mon Jun 05 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-4.20230604git131bdd6
-- Update to latest 1.6.x branch snapshot.
-- Remove wrongly applied patch.
-
-* Mon May 29 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-3.20230310gitaf134d2
-- Adjust configure options.
-
-* Fri Mar 17 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-2.20230310gitaf134d2
-- Remove leftovers from GCC settings.
-
-* Tue Mar 14 2023 Simone Caronni <negativo17@gmail.com> - 1.6.2-1.20230310gitaf134d2
-- Update to latest 1.6.2 snapshot.
-
-* Fri Feb 24 2023 Simone Caronni <negativo17@gmail.com> - 1.6.1-2
-- Update to official 1.6.1 release with patches.
-
-* Mon Jan 09 2023 Simone Caronni <negativo17@gmail.com> - 1.6.1-1.20230108git6faee60
-- Update to latest 1.6.1 snapshot.
-
-* Mon Jan 09 2023 Simone Caronni <negativo17@gmail.com> - 1.6.0-7
-- Update to final 1.6.0 release.
