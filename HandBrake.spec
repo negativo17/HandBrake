@@ -7,7 +7,7 @@
 
 Name:           HandBrake
 Version:        1.11.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An open-source multiplatform video transcoder
 License:        GPLv2+
 URL:            http://handbrake.fr/
@@ -206,6 +206,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{desktop_id}.
 %{_bindir}/HandBrakeCLI
 
 %changelog
+* Sun Sep 20 2026 Simone Caronni <negativo17@gmail.com> - 1.11.2-2
+- Rebuild for updated dependencies.
+
 * Wed Jun 17 2026 Simone Caronni <negativo17@gmail.com> - 1.11.2-1
 - Update to 1.11.2.
 - Trim changelog.
